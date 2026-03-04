@@ -1,0 +1,9 @@
+id: suppressor_i
+name: "Suppressor I"
+slot: muzzle
+required_skill: "Gunsmith 2"
+ingredients:
+  - material_id: precision_parts
+    quantity: 1
+  - material_id: carbon_fiber
+    quantity: 2

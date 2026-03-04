@@ -1,0 +1,54 @@
+materials:
+  - id: polymer
+    name: Polymer
+    rarity: common
+    category: raw
+
+  - id: carbon_fiber
+    name: Carbon Fiber
+    rarity: uncommon
+    category: raw
+
+  - id: kevlar_weave
+    name: Kevlar Weave
+    rarity: rare
+    category: raw
+    craft_recipe:
+      station: workbench
+      ingredients:
+        - material_id: carbon_fiber
+          quantity: 4
+        - material_id: polymer
+          quantity: 2
+
+  - id: ceramic_plating
+    name: Ceramic Plating
+    rarity: rare
+    category: raw
+
+  - id: composite_material
+    name: Composite Material
+    rarity: epic
+    category: raw
+    craft_recipe:
+      station: advanced_workbench
+      ingredients:
+        - material_id: kevlar_weave
+          quantity: 2
+        - material_id: ceramic_plating
+          quantity: 1
+
+  - id: salvaged_components
+    name: Salvaged Components
+    rarity: common
+    category: raw
+
+  - id: medical_supplies
+    name: Medical Supplies
+    rarity: uncommon
+    category: raw
+
+  - id: arc_crystal
+    name: Arc Crystal
+    rarity: epic
+    category: raw

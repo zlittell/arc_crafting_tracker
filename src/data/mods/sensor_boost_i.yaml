@@ -1,0 +1,9 @@
+id: sensor_boost_i
+name: "Sensor Boost I"
+slot: helmet_module
+required_skill: "Armorsmith 2"
+ingredients:
+  - material_id: advanced_circuit_board
+    quantity: 1
+  - material_id: exodus_modules
+    quantity: 1

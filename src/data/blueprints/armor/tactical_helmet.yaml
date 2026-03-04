@@ -1,0 +1,66 @@
+id: tactical_helmet
+name: Tactical Helmet
+category: armor
+subcategory: helmet
+rarity: rare
+blueprint_required: true
+
+ranks:
+  - rank: 1
+    label: "Tactical Helmet I"
+    required_skill: "Armorsmith 1"
+    ingredients:
+      - material_id: carbon_fiber
+        quantity: 3
+      - material_id: polymer
+        quantity: 4
+      - material_id: salvaged_components
+        quantity: 5
+
+  - rank: 2
+    label: "Tactical Helmet II"
+    required_skill: "Armorsmith 1"
+    ingredients:
+      - material_id: kevlar_weave
+        quantity: 1
+      - material_id: circuit_board
+        quantity: 1
+      - material_id: carbon_fiber
+        quantity: 2
+    perks:
+      - "+15 Armor"
+      - "5% Reduced Headshot Damage"
+
+  - rank: 3
+    label: "Tactical Helmet III"
+    required_skill: "Armorsmith 2"
+    ingredients:
+      - material_id: reinforced_plating
+        quantity: 1
+      - material_id: kevlar_weave
+        quantity: 2
+      - material_id: advanced_circuit_board
+        quantity: 1
+    perks:
+      - "+25 Armor"
+      - "10% Reduced Headshot Damage"
+      - "Night Vision Toggle"
+
+  - rank: 4
+    label: "Tactical Helmet IV"
+    required_skill: "Armorsmith 3"
+    ingredients:
+      - material_id: composite_material
+        quantity: 1
+      - material_id: sensor_array
+        quantity: 1
+      - material_id: ceramic_plating
+        quantity: 2
+    perks:
+      - "+40 Armor"
+      - "20% Reduced Headshot Damage"
+      - "Enhanced Sensors"
+
+compatible_mods:
+  - night_vision_i
+  - sensor_boost_i

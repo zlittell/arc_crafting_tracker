@@ -1,0 +1,66 @@
+id: bobcat
+name: Bobcat
+category: weapon
+subcategory: smg
+rarity: epic
+ammo_type: light
+blueprint_required: true
+
+ranks:
+  - rank: 1
+    label: "Bobcat I"
+    required_skill: "Gunsmith 3"
+    ingredients:
+      - material_id: magnetic_accelerator
+        quantity: 1
+      - material_id: light_gun_parts
+        quantity: 3
+      - material_id: exodus_modules
+        quantity: 2
+
+  - rank: 2
+    label: "Bobcat II"
+    required_skill: "Gunsmith 1"
+    ingredients:
+      - material_id: advanced_mechanical_components
+        quantity: 2
+      - material_id: light_gun_parts
+        quantity: 1
+    perks:
+      - "15% Reduced Max Shot Dispersion"
+      - "+10 Durability"
+
+  - rank: 3
+    label: "Bobcat III"
+    required_skill: "Gunsmith 2"
+    ingredients:
+      - material_id: precision_parts
+        quantity: 2
+      - material_id: magnetic_accelerator
+        quantity: 1
+      - material_id: exodus_modules
+        quantity: 3
+    perks:
+      - "+5% Fire Rate"
+      - "+15 Durability"
+
+  - rank: 4
+    label: "Bobcat IV"
+    required_skill: "Gunsmith 4"
+    ingredients:
+      - material_id: high_caliber_parts
+        quantity: 1
+      - material_id: sensor_array
+        quantity: 1
+      - material_id: advanced_mechanical_components
+        quantity: 3
+    perks:
+      - "+10% Damage"
+      - "20% Reduced Recoil"
+      - "+20 Durability"
+
+compatible_mods:
+  - extended_light_mag_i
+  - vertical_grip_i
+  - suppressor_i
+  - reflex_sight_i

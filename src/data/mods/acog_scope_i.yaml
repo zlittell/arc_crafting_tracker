@@ -1,0 +1,9 @@
+id: acog_scope_i
+name: "ACOG Scope I"
+slot: optic
+required_skill: "Gunsmith 2"
+ingredients:
+  - material_id: advanced_circuit_board
+    quantity: 1
+  - material_id: precision_parts
+    quantity: 1

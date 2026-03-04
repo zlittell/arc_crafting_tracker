@@ -1,0 +1,61 @@
+materials:
+  - id: magnetic_accelerator
+    name: Magnetic Accelerator
+    rarity: rare
+    category: electronics
+
+  - id: exodus_modules
+    name: Exodus Modules
+    rarity: uncommon
+    category: electronics
+
+  - id: circuit_board
+    name: Circuit Board
+    rarity: uncommon
+    category: electronics
+
+  - id: advanced_circuit_board
+    name: Advanced Circuit Board
+    rarity: rare
+    category: electronics
+    craft_recipe:
+      station: electronics_bench
+      ingredients:
+        - material_id: circuit_board
+          quantity: 3
+        - material_id: copper_wire
+          quantity: 4
+
+  - id: copper_wire
+    name: Copper Wire
+    rarity: common
+    category: electronics
+
+  - id: sensor_array
+    name: Sensor Array
+    rarity: epic
+    category: electronics
+    craft_recipe:
+      station: electronics_bench
+      ingredients:
+        - material_id: advanced_circuit_board
+          quantity: 2
+        - material_id: magnetic_accelerator
+          quantity: 1
+
+  - id: power_cell
+    name: Power Cell
+    rarity: uncommon
+    category: electronics
+
+  - id: high_capacity_battery
+    name: High Capacity Battery
+    rarity: rare
+    category: electronics
+    craft_recipe:
+      station: electronics_bench
+      ingredients:
+        - material_id: power_cell
+          quantity: 3
+        - material_id: copper_wire
+          quantity: 2

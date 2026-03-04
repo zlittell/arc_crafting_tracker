@@ -1,0 +1,9 @@
+id: vertical_grip_i
+name: "Vertical Grip I"
+slot: grip
+required_skill: "Gunsmith 1"
+ingredients:
+  - material_id: light_gun_parts
+    quantity: 1
+  - material_id: polymer
+    quantity: 2

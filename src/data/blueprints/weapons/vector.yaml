@@ -1,0 +1,68 @@
+id: vector
+name: Vector
+category: weapon
+subcategory: assault_rifle
+rarity: epic
+ammo_type: light
+blueprint_required: true
+
+ranks:
+  - rank: 1
+    label: "Vector I"
+    required_skill: "Gunsmith 3"
+    ingredients:
+      - material_id: light_gun_parts
+        quantity: 4
+      - material_id: circuit_board
+        quantity: 2
+      - material_id: polymer
+        quantity: 3
+
+  - rank: 2
+    label: "Vector II"
+    required_skill: "Gunsmith 2"
+    ingredients:
+      - material_id: advanced_mechanical_components
+        quantity: 2
+      - material_id: exodus_modules
+        quantity: 2
+    perks:
+      - "+5% Accuracy"
+      - "+10 Durability"
+
+  - rank: 3
+    label: "Vector III"
+    required_skill: "Gunsmith 3"
+    ingredients:
+      - material_id: precision_parts
+        quantity: 3
+      - material_id: advanced_circuit_board
+        quantity: 1
+      - material_id: light_gun_parts
+        quantity: 2
+    perks:
+      - "+8% Damage"
+      - "10% Reduced Recoil"
+      - "+15 Durability"
+
+  - rank: 4
+    label: "Vector IV"
+    required_skill: "Gunsmith 5"
+    ingredients:
+      - material_id: high_caliber_parts
+        quantity: 2
+      - material_id: sensor_array
+        quantity: 1
+      - material_id: arc_crystal
+        quantity: 1
+    perks:
+      - "+15% Damage"
+      - "20% Reduced Recoil"
+      - "+20 Durability"
+
+compatible_mods:
+  - extended_light_mag_i
+  - vertical_grip_i
+  - suppressor_i
+  - reflex_sight_i
+  - acog_scope_i
