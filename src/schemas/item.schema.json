@@ -25,10 +25,6 @@
     "subcategory": { "type": "string" },
     "ammo_type": { "type": "string" },
     "slot": { "type": "string" },
-    "compatible_mods": {
-      "type": "array",
-      "items": { "type": "string" }
-    },
     "craft_recipe": {
       "type": "object",
       "required": ["ingredients"],

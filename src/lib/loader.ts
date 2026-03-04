@@ -9,10 +9,14 @@ for (const [, raw] of Object.entries(allModules)) {
   const parsed = yaml.load(raw as string) as Record<string, unknown> | null;
   if (!parsed || typeof parsed !== 'object') continue;
 
-  // List format: { category: ..., materials: [...] }
-  if ('materials' in parsed && Array.isArray(parsed.materials)) {
+  // List format: { category: ..., items: [...] } or legacy { category: ..., materials: [...] }
+  const listEntries =
+    ('items' in parsed && Array.isArray(parsed.items)) ? parsed.items as Record<string, unknown>[] :
+    ('materials' in parsed && Array.isArray(parsed.materials)) ? parsed.materials as Record<string, unknown>[] :
+    null;
+  if (listEntries) {
     const category = parsed.category;
-    for (const entry of parsed.materials as Record<string, unknown>[]) {
+    for (const entry of listEntries) {
       if (entry?.id) ITEM_REGISTRY.set(entry.id as string, { ...entry, category } as Item);
     }
   // Single item format: { id: ..., category: ..., ... }

@@ -28,7 +28,6 @@ export interface Item {
   subcategory?: string;
   ammo_type?: string;
   slot?: string;
-  compatible_mods?: string[];
   craft_recipe?: { ingredients: Ingredient[] };
   upgrades?: UpgradeLevel[];
 }
