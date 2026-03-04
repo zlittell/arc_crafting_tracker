@@ -1,8 +1,0 @@
-id: choke_barrel_i
-name: "Choke Barrel I"
-slot: barrel
-ingredients:
-  - material_id: heavy_gun_parts
-    quantity: 2
-  - material_id: scrap_metal
-    quantity: 3

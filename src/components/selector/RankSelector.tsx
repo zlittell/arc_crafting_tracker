@@ -1,26 +1,26 @@
-import { RANK_LABELS } from '../../lib/utils';
+import { LEVEL_LABELS } from '../../lib/utils';
 
 interface Props {
-  availableRanks: number[];
-  selectedRank: number;
-  onSetRank: (rank: number) => void;
+  availableLevels: number[];
+  selectedLevel: number;
+  onSetLevel: (level: number) => void;
 }
 
-export function RankSelector({ availableRanks, selectedRank, onSetRank }: Props) {
+export function RankSelector({ availableLevels, selectedLevel, onSetLevel }: Props) {
   return (
     <div className="flex items-center gap-1 mt-2">
-      <span className="text-xs text-gray-500 mr-1">Target Rank:</span>
-      {availableRanks.map(rank => (
+      <span className="text-xs text-gray-500 mr-1">Target Level:</span>
+      {availableLevels.map(level => (
         <button
-          key={rank}
-          onClick={() => onSetRank(rank)}
+          key={level}
+          onClick={() => onSetLevel(level)}
           className={`w-8 h-7 text-xs font-semibold rounded transition-colors ${
-            selectedRank === rank
+            selectedLevel === level
               ? 'bg-blue-600 text-white'
               : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
           }`}
         >
-          {RANK_LABELS[rank] ?? rank}
+          {LEVEL_LABELS[level] ?? level}
         </button>
       ))}
     </div>

@@ -1,9 +1,5 @@
-import type { ShoppingList as ShoppingListType } from '../../types/resolver';
-import type { ResolvedMaterial } from '../../types/resolver';
+import type { ShoppingList as ShoppingListType, ResolvedMaterial } from '../../types/resolver';
 import { MaterialGroup } from './MaterialGroup';
-import { groupBy } from '../../lib/utils';
-
-const RARITY_ORDER = ['legendary', 'epic', 'rare', 'uncommon', 'common'];
 
 interface Props {
   shoppingList: ShoppingListType;
@@ -26,7 +22,8 @@ export function ShoppingList({ shoppingList, collected, onSetCollected, onClearC
     );
   }
 
-  const grouped = groupBy(materials, m => m.rarity);
+  const gather = materials.filter(m => !m.craft_recipe_available);
+  const craft = materials.filter(m => m.craft_recipe_available);
   const totalCount = materials.length;
   const collectedCount = materials.filter(m => (collected[m.material_id] ?? 0) >= m.quantity).length;
 
@@ -55,29 +52,24 @@ export function ShoppingList({ shoppingList, collected, onSetCollected, onClearC
 
       {/* Material groups */}
       <div className="flex-1 overflow-y-auto">
-        {RARITY_ORDER.filter(r => grouped[r]).map(rarity => (
+        {gather.length > 0 && (
           <MaterialGroup
-            key={rarity}
-            rarity={rarity}
-            materials={grouped[rarity] as ResolvedMaterial[]}
+            label="Gather"
+            materials={gather}
             collected={collected}
             onSetCollected={onSetCollected}
             onRefineMaterial={onRefineMaterial}
           />
-        ))}
-        {/* Any rarities not in our defined order */}
-        {Object.keys(grouped)
-          .filter(r => !RARITY_ORDER.includes(r))
-          .map(rarity => (
-            <MaterialGroup
-              key={rarity}
-              rarity={rarity}
-              materials={grouped[rarity] as ResolvedMaterial[]}
-              collected={collected}
-              onSetCollected={onSetCollected}
-              onRefineMaterial={onRefineMaterial}
-            />
-          ))}
+        )}
+        {craft.length > 0 && (
+          <MaterialGroup
+            label="Craft"
+            materials={craft as ResolvedMaterial[]}
+            collected={collected}
+            onSetCollected={onSetCollected}
+            onRefineMaterial={onRefineMaterial}
+          />
+        )}
       </div>
     </div>
   );

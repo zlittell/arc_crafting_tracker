@@ -1,7 +1,7 @@
-import type { Mod } from '../../types/mod';
+import type { Item } from '../../types/item';
 
 interface Props {
-  mod: Mod;
+  mod: Item;
   isSelected: boolean;
   quantity: number;
   onToggle: (modId: string) => void;
@@ -25,7 +25,7 @@ export function ModCard({ mod, isSelected, quantity, onToggle, onSetQuantity, on
           className="rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 focus:ring-offset-transparent"
         />
         <span className="text-sm font-medium text-gray-200">{mod.name}</span>
-        <span className="ml-auto text-xs text-gray-500">{mod.slot}</span>
+        {mod.slot && <span className="ml-auto text-xs text-gray-500">{mod.slot}</span>}
       </label>
 
       {isSelected && (

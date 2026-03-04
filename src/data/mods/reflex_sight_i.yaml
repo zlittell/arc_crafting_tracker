@@ -1,8 +1,0 @@
-id: reflex_sight_i
-name: "Reflex Sight I"
-slot: optic
-ingredients:
-  - material_id: circuit_board
-    quantity: 1
-  - material_id: polymer
-    quantity: 1

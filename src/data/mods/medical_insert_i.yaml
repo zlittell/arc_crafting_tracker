@@ -1,8 +1,0 @@
-id: medical_insert_i
-name: "Medical Insert I"
-slot: vest_module
-ingredients:
-  - material_id: medical_supplies
-    quantity: 3
-  - material_id: polymer
-    quantity: 2

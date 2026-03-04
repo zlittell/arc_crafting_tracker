@@ -1,12 +1,12 @@
+# yaml-language-server: $schema=../schemas/item.schema.json
 id: bobcat
 name: Bobcat
 category: weapon
 subcategory: smg
-rarity: epic
 ammo_type: light
 
-ranks:
-  - rank: 1
+upgrades:
+  - level: 1
     label: "Bobcat I"
     ingredients:
       - material_id: magnetic_accelerator
@@ -16,7 +16,7 @@ ranks:
       - material_id: exodus_modules
         quantity: 2
 
-  - rank: 2
+  - level: 2
     label: "Bobcat II"
     ingredients:
       - material_id: advanced_mechanical_components
@@ -27,7 +27,7 @@ ranks:
       - "15% Reduced Max Shot Dispersion"
       - "+10 Durability"
 
-  - rank: 3
+  - level: 3
     label: "Bobcat III"
     ingredients:
       - material_id: precision_parts
@@ -40,7 +40,7 @@ ranks:
       - "+5% Fire Rate"
       - "+15 Durability"
 
-  - rank: 4
+  - level: 4
     label: "Bobcat IV"
     ingredients:
       - material_id: high_caliber_parts

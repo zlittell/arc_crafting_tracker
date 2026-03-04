@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=../schemas/materials-list.schema.json
+category: crafting_material
+materials:
+  # Topside (gather only)
+  - id: polymer
+    name: Polymer
+
+  - id: carbon_fiber
+    name: Carbon Fiber
+
+  - id: ceramic_plating
+    name: Ceramic Plating
+
+  - id: salvaged_components
+    name: Salvaged Components
+
+  - id: medical_supplies
+    name: Medical Supplies
+
+  - id: arc_crystal
+    name: Arc Crystal
+
+  - id: scrap_metal
+    name: Scrap Metal
+
+  - id: light_gun_parts
+    name: Light Gun Parts
+
+  - id: heavy_gun_parts
+    name: Heavy Gun Parts
+
+  - id: magnetic_accelerator
+    name: Magnetic Accelerator
+
+  - id: exodus_modules
+    name: Exodus Modules
+
+  - id: circuit_board
+    name: Circuit Board
+
+  - id: copper_wire
+    name: Copper Wire
+
+  - id: power_cell
+    name: Power Cell
+
+  # Refined (craft recipe available)
+  - id: kevlar_weave
+    name: Kevlar Weave
+    craft_recipe:
+      ingredients:
+        - material_id: carbon_fiber
+          quantity: 4
+        - material_id: polymer
+          quantity: 2
+
+  - id: composite_material
+    name: Composite Material
+    craft_recipe:
+      ingredients:
+        - material_id: kevlar_weave
+          quantity: 2
+        - material_id: ceramic_plating
+          quantity: 1
+
+  - id: refined_metal
+    name: Refined Metal
+    craft_recipe:
+      ingredients:
+        - material_id: scrap_metal
+          quantity: 4
+
+  - id: advanced_mechanical_components
+    name: Advanced Mechanical Components
+    craft_recipe:
+      ingredients:
+        - material_id: light_gun_parts
+          quantity: 3
+        - material_id: scrap_metal
+          quantity: 5
+
+  - id: precision_parts
+    name: Precision Parts
+    craft_recipe:
+      ingredients:
+        - material_id: light_gun_parts
+          quantity: 2
+        - material_id: refined_metal
+          quantity: 2
+
+  - id: reinforced_plating
+    name: Reinforced Plating
+    craft_recipe:
+      ingredients:
+        - material_id: scrap_metal
+          quantity: 8
+        - material_id: polymer
+          quantity: 3
+
+  - id: high_caliber_parts
+    name: High Caliber Parts
+    craft_recipe:
+      ingredients:
+        - material_id: heavy_gun_parts
+          quantity: 4
+        - material_id: advanced_mechanical_components
+          quantity: 2
+
+  - id: advanced_circuit_board
+    name: Advanced Circuit Board
+    craft_recipe:
+      ingredients:
+        - material_id: circuit_board
+          quantity: 3
+        - material_id: copper_wire
+          quantity: 4
+
+  - id: sensor_array
+    name: Sensor Array
+    craft_recipe:
+      ingredients:
+        - material_id: advanced_circuit_board
+          quantity: 2
+        - material_id: magnetic_accelerator
+          quantity: 1
+
+  - id: high_capacity_battery
+    name: High Capacity Battery
+    craft_recipe:
+      ingredients:
+        - material_id: power_cell
+          quantity: 3
+        - material_id: copper_wire
+          quantity: 2

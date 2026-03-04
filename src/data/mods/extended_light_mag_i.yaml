@@ -1,8 +1,0 @@
-id: extended_light_mag_i
-name: "Extended Light Mag I"
-slot: light_mag
-ingredients:
-  - material_id: light_gun_parts
-    quantity: 2
-  - material_id: polymer
-    quantity: 1

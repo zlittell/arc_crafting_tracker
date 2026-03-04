@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import type { LoadoutSelection } from './types/resolver';
-import { BLUEPRINT_REGISTRY, MATERIAL_REGISTRY } from './lib/loader';
+import { ITEM_REGISTRY } from './lib/loader';
 import { resolveShoppingList } from './lib/resolver';
 import { Layout } from './components/layout/Layout';
 import { Header } from './components/layout/Header';
@@ -23,27 +23,25 @@ export default function App() {
     [selections, modQuantities]
   );
 
-  function handleToggleBlueprint(blueprintId: string) {
+  function handleToggleItem(itemId: string) {
     setSelections(prev => {
-      const exists = prev.find(s => s.blueprint_id === blueprintId);
-      if (exists) {
-        return prev.filter(s => s.blueprint_id !== blueprintId);
-      }
-      const blueprint = BLUEPRINT_REGISTRY.get(blueprintId);
-      const defaultRank = blueprint?.ranks[0]?.rank ?? 1;
-      return [...prev, { blueprint_id: blueprintId, target_rank: defaultRank, quantity: 1 }];
+      const exists = prev.find(s => s.item_id === itemId);
+      if (exists) return prev.filter(s => s.item_id !== itemId);
+      const item = ITEM_REGISTRY.get(itemId);
+      const defaultLevel = item?.upgrades?.[0]?.level ?? 1;
+      return [...prev, { item_id: itemId, target_level: defaultLevel, quantity: 1 }];
     });
   }
 
-  function handleSetRank(blueprintId: string, rank: number) {
+  function handleSetLevel(itemId: string, level: number) {
     setSelections(prev =>
-      prev.map(s => s.blueprint_id === blueprintId ? { ...s, target_rank: rank } : s)
+      prev.map(s => s.item_id === itemId ? { ...s, target_level: level } : s)
     );
   }
 
-  function handleSetBlueprintQuantity(blueprintId: string, qty: number) {
+  function handleSetItemQuantity(itemId: string, qty: number) {
     setSelections(prev =>
-      prev.map(s => s.blueprint_id === blueprintId ? { ...s, quantity: Math.max(0, qty) } : s)
+      prev.map(s => s.item_id === itemId ? { ...s, quantity: Math.max(0, qty) } : s)
     );
   }
 
@@ -62,8 +60,8 @@ export default function App() {
     setModQuantities(prev => ({ ...prev, [modId]: Math.max(0, qty) }));
   }
 
-  function handleMarkBlueprintCrafted(blueprintId: string) {
-    const selection = selections.find(s => s.blueprint_id === blueprintId);
+  function handleMarkItemCrafted(itemId: string) {
+    const selection = selections.find(s => s.item_id === itemId);
     if (!selection) return;
     const oneCraft = resolveShoppingList([{ ...selection, quantity: 1 }], {}, 'craftable');
     setCollected(prev => {
@@ -73,7 +71,7 @@ export default function App() {
       }
       return next;
     });
-    handleSetBlueprintQuantity(blueprintId, selection.quantity - 1);
+    handleSetItemQuantity(itemId, selection.quantity - 1);
   }
 
   function handleMarkModCrafted(modId: string) {
@@ -90,15 +88,15 @@ export default function App() {
     handleSetModQuantity(modId, qty - 1);
   }
 
-  function handleRefineMaterial(materialId: string) {
-    const material = MATERIAL_REGISTRY.get(materialId);
-    if (!material?.craft_recipe) return;
+  function handleRefineItem(itemId: string) {
+    const item = ITEM_REGISTRY.get(itemId);
+    if (!item?.craft_recipe) return;
     setCollected(prev => {
       const next = { ...prev };
-      for (const ing of material.craft_recipe!.ingredients) {
+      for (const ing of item.craft_recipe!.ingredients) {
         next[ing.material_id] = Math.max(0, (next[ing.material_id] ?? 0) - ing.quantity);
       }
-      next[materialId] = (next[materialId] ?? 0) + 1;
+      next[itemId] = (next[itemId] ?? 0) + 1;
       return next;
     });
   }
@@ -118,10 +116,10 @@ export default function App() {
         <LoadoutSelector
           selections={selections}
           modQuantities={modQuantities}
-          onToggle={handleToggleBlueprint}
-          onSetRank={handleSetRank}
-          onSetBlueprintQuantity={handleSetBlueprintQuantity}
-          onMarkBlueprintCrafted={handleMarkBlueprintCrafted}
+          onToggleItem={handleToggleItem}
+          onSetLevel={handleSetLevel}
+          onSetItemQuantity={handleSetItemQuantity}
+          onMarkItemCrafted={handleMarkItemCrafted}
           onToggleMod={handleToggleMod}
           onSetModQuantity={handleSetModQuantity}
           onMarkModCrafted={handleMarkModCrafted}
@@ -133,7 +131,7 @@ export default function App() {
           collected={collected}
           onSetCollected={handleSetCollected}
           onClearCollected={handleClearCollected}
-          onRefineMaterial={handleRefineMaterial}
+          onRefineMaterial={handleRefineItem}
         />
       }
     />

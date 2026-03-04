@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { LoadoutSelection } from '../../types/resolver';
-import { BLUEPRINT_REGISTRY, MOD_REGISTRY } from '../../lib/loader';
+import { ITEM_REGISTRY } from '../../lib/loader';
 import { CategorySection } from './CategorySection';
 import { ModCard } from './ModCard';
 import { groupBy, capitalize } from '../../lib/utils';
@@ -8,34 +8,35 @@ import { groupBy, capitalize } from '../../lib/utils';
 interface Props {
   selections: LoadoutSelection[];
   modQuantities: Record<string, number>;
-  onToggle: (blueprintId: string) => void;
-  onSetRank: (blueprintId: string, rank: number) => void;
-  onSetBlueprintQuantity: (blueprintId: string, qty: number) => void;
-  onMarkBlueprintCrafted: (blueprintId: string) => void;
+  onToggleItem: (itemId: string) => void;
+  onSetLevel: (itemId: string, level: number) => void;
+  onSetItemQuantity: (itemId: string, qty: number) => void;
+  onMarkItemCrafted: (itemId: string) => void;
   onToggleMod: (modId: string) => void;
   onSetModQuantity: (modId: string, qty: number) => void;
   onMarkModCrafted: (modId: string) => void;
 }
 
-const CATEGORY_ORDER = ['weapon', 'armor', 'tool'];
+const UPGRADEABLE_CATEGORY_ORDER = ['weapon'];
 
 export function LoadoutSelector({
-  selections, modQuantities, onToggle, onSetRank,
-  onSetBlueprintQuantity, onMarkBlueprintCrafted,
+  selections, modQuantities, onToggleItem, onSetLevel,
+  onSetItemQuantity, onMarkItemCrafted,
   onToggleMod, onSetModQuantity, onMarkModCrafted,
 }: Props) {
   const [modsCollapsed, setModsCollapsed] = useState(false);
 
-  const blueprints = Array.from(BLUEPRINT_REGISTRY.values());
-  const grouped = groupBy(blueprints, b => b.category);
-  const mods = Array.from(MOD_REGISTRY.values());
+  const allItems = Array.from(ITEM_REGISTRY.values());
+  const upgradeableItems = allItems.filter(i => i.upgrades);
+  const grouped = groupBy(upgradeableItems, i => i.category);
 
   const orderedCategories = [
-    ...CATEGORY_ORDER.filter(c => grouped[c]),
-    ...Object.keys(grouped).filter(c => !CATEGORY_ORDER.includes(c)),
+    ...UPGRADEABLE_CATEGORY_ORDER.filter(c => grouped[c]),
+    ...Object.keys(grouped).filter(c => !UPGRADEABLE_CATEGORY_ORDER.includes(c)),
   ];
 
-  const groupedMods = groupBy(mods, m => m.slot);
+  const mods = allItems.filter(i => i.category === 'weapon_mod');
+  const groupedMods = groupBy(mods, m => m.slot ?? 'other');
   const activeModCount = Object.keys(modQuantities).length;
 
   return (
@@ -44,12 +45,12 @@ export function LoadoutSelector({
         <CategorySection
           key={category}
           category={category}
-          blueprints={grouped[category]}
+          items={grouped[category]}
           selections={selections}
-          onToggle={onToggle}
-          onSetRank={onSetRank}
-          onSetQuantity={onSetBlueprintQuantity}
-          onMarkCrafted={onMarkBlueprintCrafted}
+          onToggle={onToggleItem}
+          onSetLevel={onSetLevel}
+          onSetQuantity={onSetItemQuantity}
+          onMarkCrafted={onMarkItemCrafted}
         />
       ))}
 

@@ -1,22 +1,22 @@
 import { useState } from 'react';
-import type { Blueprint } from '../../types/blueprint';
+import type { Item } from '../../types/item';
 import type { LoadoutSelection } from '../../types/resolver';
 import { BlueprintCard } from './BlueprintCard';
 import { capitalize } from '../../lib/utils';
 
 interface Props {
   category: string;
-  blueprints: Blueprint[];
+  items: Item[];
   selections: LoadoutSelection[];
-  onToggle: (blueprintId: string) => void;
-  onSetRank: (blueprintId: string, rank: number) => void;
-  onSetQuantity: (blueprintId: string, qty: number) => void;
-  onMarkCrafted: (blueprintId: string) => void;
+  onToggle: (itemId: string) => void;
+  onSetLevel: (itemId: string, level: number) => void;
+  onSetQuantity: (itemId: string, qty: number) => void;
+  onMarkCrafted: (itemId: string) => void;
 }
 
-export function CategorySection({ category, blueprints, selections, onToggle, onSetRank, onSetQuantity, onMarkCrafted }: Props) {
+export function CategorySection({ category, items, selections, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
   const [collapsed, setCollapsed] = useState(false);
-  const activeCount = blueprints.filter(b => selections.some(s => s.blueprint_id === b.id)).length;
+  const activeCount = items.filter(i => selections.some(s => s.item_id === i.id)).length;
 
   return (
     <div className="mb-5">
@@ -37,13 +37,13 @@ export function CategorySection({ category, blueprints, selections, onToggle, on
 
       {!collapsed && (
         <div className="space-y-2">
-          {blueprints.map(blueprint => (
+          {items.map(item => (
             <BlueprintCard
-              key={blueprint.id}
-              blueprint={blueprint}
-              selection={selections.find(s => s.blueprint_id === blueprint.id)}
+              key={item.id}
+              item={item}
+              selection={selections.find(s => s.item_id === item.id)}
               onToggle={onToggle}
-              onSetRank={onSetRank}
+              onSetLevel={onSetLevel}
               onSetQuantity={onSetQuantity}
               onMarkCrafted={onMarkCrafted}
             />

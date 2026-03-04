@@ -1,23 +1,22 @@
 import type { ResolvedMaterial } from '../../types/resolver';
 import { MaterialRow } from './MaterialRow';
-import { rarityBadgeColor, capitalize } from '../../lib/utils';
 
 interface Props {
-  rarity: string;
+  label: string;
   materials: ResolvedMaterial[];
   collected: Record<string, number>;
   onSetCollected: (materialId: string, count: number) => void;
   onRefineMaterial: (materialId: string) => void;
 }
 
-export function MaterialGroup({ rarity, materials, collected, onSetCollected, onRefineMaterial }: Props) {
+export function MaterialGroup({ label, materials, collected, onSetCollected, onRefineMaterial }: Props) {
   const completedCount = materials.filter(m => (collected[m.material_id] ?? 0) >= m.quantity).length;
 
   return (
     <div className="mb-4">
       <div className="flex items-center gap-2 mb-1 px-1">
-        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${rarityBadgeColor(rarity)}`}>
-          {capitalize(rarity)}
+        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">
+          {label}
         </span>
         <span className="text-xs text-gray-500">
           {completedCount}/{materials.length}

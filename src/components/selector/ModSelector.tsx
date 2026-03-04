@@ -1,4 +1,4 @@
-import { MOD_REGISTRY } from '../../lib/loader';
+import { ITEM_REGISTRY } from '../../lib/loader';
 
 interface Props {
   compatibleMods: string[];
@@ -14,7 +14,7 @@ export function ModSelector({ compatibleMods, selectedModIds, onToggleMod }: Pro
       <span className="text-xs text-gray-500">Mods:</span>
       <div className="flex flex-wrap gap-1 mt-1">
         {compatibleMods.map(modId => {
-          const mod = MOD_REGISTRY.get(modId);
+          const mod = ITEM_REGISTRY.get(modId);
           if (!mod) return null;
           const isSelected = selectedModIds.includes(modId);
           return (

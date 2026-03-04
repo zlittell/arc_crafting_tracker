@@ -1,5 +1,5 @@
 import type { LoadoutSelection, ResolutionMode, ResolvedMaterial, MaterialSource, ShoppingList } from '../types/resolver';
-import { BLUEPRINT_REGISTRY, MOD_REGISTRY, MATERIAL_REGISTRY } from './loader';
+import { ITEM_REGISTRY } from './loader';
 
 interface Accumulator {
   quantity: number;
@@ -16,12 +16,12 @@ function expandIngredient(
   accumulator: Map<string, Accumulator>,
   visited: Set<string>
 ): void {
-  const material = MATERIAL_REGISTRY.get(material_id);
+  const item = ITEM_REGISTRY.get(material_id);
 
-  if (mode === 'raw' && material?.craft_recipe && !visited.has(material_id)) {
+  if (mode === 'raw' && item?.craft_recipe && !visited.has(material_id)) {
     const visited2 = new Set(visited);
     visited2.add(material_id);
-    for (const sub of material.craft_recipe.ingredients) {
+    for (const sub of item.craft_recipe.ingredients) {
       expandIngredient(
         sub.material_id,
         sub.quantity * totalQty,
@@ -48,21 +48,6 @@ function expandIngredient(
   }
 }
 
-const RARITY_ORDER: Record<string, number> = {
-  legendary: 0,
-  epic: 1,
-  rare: 2,
-  uncommon: 3,
-  common: 4,
-};
-
-function raritySort(a: ResolvedMaterial, b: ResolvedMaterial): number {
-  const aOrder = RARITY_ORDER[a.rarity] ?? 99;
-  const bOrder = RARITY_ORDER[b.rarity] ?? 99;
-  if (aOrder !== bOrder) return aOrder - bOrder;
-  return a.name.localeCompare(b.name);
-}
-
 export function resolveShoppingList(
   selections: LoadoutSelection[],
   modQuantities: Record<string, number>,
@@ -71,21 +56,21 @@ export function resolveShoppingList(
   const accumulator = new Map<string, Accumulator>();
 
   for (const selection of selections) {
-    const blueprint = BLUEPRINT_REGISTRY.get(selection.blueprint_id);
-    if (!blueprint) continue;
+    const item = ITEM_REGISTRY.get(selection.item_id);
+    if (!item?.upgrades) continue;
     const qty = selection.quantity ?? 1;
 
-    for (let rankNum = 1; rankNum <= selection.target_rank; rankNum++) {
-      const rankData = blueprint.ranks.find(r => r.rank === rankNum);
-      if (!rankData) continue;
+    for (let levelNum = 1; levelNum <= selection.target_level; levelNum++) {
+      const levelData = item.upgrades.find(u => u.level === levelNum);
+      if (!levelData) continue;
 
-      for (const ingredient of rankData.ingredients) {
+      for (const ingredient of levelData.ingredients) {
         expandIngredient(
           ingredient.material_id,
           ingredient.quantity * qty,
           ingredient.quantity,
           mode,
-          { blueprint_name: blueprint.name, context: rankData.label, quantity: ingredient.quantity * qty },
+          { item_name: item.name, context: levelData.label ?? `Level ${levelNum}`, quantity: ingredient.quantity * qty },
           accumulator,
           new Set()
         );
@@ -94,16 +79,16 @@ export function resolveShoppingList(
   }
 
   for (const [modId, modQty] of Object.entries(modQuantities)) {
-    const mod = MOD_REGISTRY.get(modId);
-    if (!mod) continue;
+    const mod = ITEM_REGISTRY.get(modId);
+    if (!mod?.craft_recipe) continue;
 
-    for (const ingredient of mod.ingredients) {
+    for (const ingredient of mod.craft_recipe.ingredients) {
       expandIngredient(
         ingredient.material_id,
         ingredient.quantity * modQty,
         ingredient.quantity,
         mode,
-        { blueprint_name: mod.name, context: 'Mod', quantity: ingredient.quantity * modQty },
+        { item_name: mod.name, context: 'Mod', quantity: ingredient.quantity * modQty },
         accumulator,
         new Set()
       );
@@ -112,20 +97,23 @@ export function resolveShoppingList(
 
   const materials: ResolvedMaterial[] = [];
   for (const [material_id, acc] of accumulator) {
-    const material = MATERIAL_REGISTRY.get(material_id);
+    const item = ITEM_REGISTRY.get(material_id);
     materials.push({
       material_id,
-      name: material?.name ?? material_id,
-      rarity: material?.rarity ?? 'common',
-      category: material?.category ?? 'unknown',
+      name: item?.name ?? material_id,
       quantity: acc.quantity,
       per_craft_quantity: acc.per_craft_quantity,
-      craft_recipe_available: !!material?.craft_recipe,
+      craft_recipe_available: !!item?.craft_recipe,
       sources: acc.sources,
     });
   }
 
-  materials.sort(raritySort);
+  materials.sort((a, b) => {
+    if (a.craft_recipe_available !== b.craft_recipe_available) {
+      return a.craft_recipe_available ? 1 : -1;
+    }
+    return a.name.localeCompare(b.name);
+  });
 
   return { materials };
 }

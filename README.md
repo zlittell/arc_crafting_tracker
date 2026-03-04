@@ -11,7 +11,10 @@ bun run build     # production build → dist/
 bun run preview   # preview the production build locally
 ```
 
-> Requires [Bun](https://bun.sh). Install with `curl -fsSL https://bun.sh/install | bash`.
+## Developing
+
+- Requires [Bun](https://bun.sh). Install with `curl -fsSL https://bun.sh/install | bash`.
+- run `bun install` to set up dependencies
 
 ## How It Works
 

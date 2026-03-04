@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { ResolvedMaterial } from '../../types/resolver';
-import { MATERIAL_REGISTRY } from '../../lib/loader';
-import { rarityColor } from '../../lib/utils';
+import { ITEM_REGISTRY } from '../../lib/loader';
 
 interface Props {
   material: ResolvedMaterial;
@@ -19,7 +18,7 @@ export function MaterialRow({ material, allCollected, onSetCollected, onRefineMa
   const isComplete = remaining === 0;
 
   const recipe = material.craft_recipe_available
-    ? MATERIAL_REGISTRY.get(material.material_id)?.craft_recipe ?? null
+    ? ITEM_REGISTRY.get(material.material_id)?.craft_recipe ?? null
     : null;
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -56,7 +55,7 @@ export function MaterialRow({ material, allCollected, onSetCollected, onRefineMa
         <div className="flex-1 min-w-0">
           <button
             onClick={() => setShowSources(s => !s)}
-            className={`text-left text-sm font-medium truncate w-full ${rarityColor(material.rarity)} ${
+            className={`text-left text-sm font-medium truncate w-full text-gray-200 ${
               isComplete ? 'line-through' : ''
             } hover:underline bg-transparent border-0 p-0 cursor-pointer`}
             title="Click to show sources"
@@ -68,7 +67,7 @@ export function MaterialRow({ material, allCollected, onSetCollected, onRefineMa
             <div className="mt-1 text-xs text-gray-400 space-y-0.5">
               {material.sources.map((s, i) => (
                 <div key={i} className="pl-2 border-l border-gray-600">
-                  {s.blueprint_name} — {s.context}: ×{s.quantity}
+                  {s.item_name} — {s.context}: ×{s.quantity}
                 </div>
               ))}
             </div>
@@ -123,12 +122,12 @@ export function MaterialRow({ material, allCollected, onSetCollected, onRefineMa
           </div>
 
           {recipe.ingredients.map(ing => {
-            const mat = MATERIAL_REGISTRY.get(ing.material_id);
+            const mat = ITEM_REGISTRY.get(ing.material_id);
             const ingCollected = allCollected[ing.material_id] ?? 0;
             const hasEnough = ingCollected >= ing.quantity;
             return (
               <div key={ing.material_id} className="flex items-center gap-2 text-xs">
-                <span className={`flex-1 ${rarityColor(mat?.rarity ?? 'common')}`}>
+                <span className="flex-1 text-gray-300">
                   {mat?.name ?? ing.material_id}
                 </span>
                 <span className="text-gray-400">×{ing.quantity}</span>

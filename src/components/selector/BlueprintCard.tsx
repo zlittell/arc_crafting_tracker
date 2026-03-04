@@ -1,20 +1,19 @@
-import type { Blueprint } from '../../types/blueprint';
+import type { Item } from '../../types/item';
 import type { LoadoutSelection } from '../../types/resolver';
 import { RankSelector } from './RankSelector';
-import { rarityColor, rarityBadgeColor, capitalize } from '../../lib/utils';
 
 interface Props {
-  blueprint: Blueprint;
+  item: Item;
   selection: LoadoutSelection | undefined;
-  onToggle: (blueprintId: string) => void;
-  onSetRank: (blueprintId: string, rank: number) => void;
-  onSetQuantity: (blueprintId: string, qty: number) => void;
-  onMarkCrafted: (blueprintId: string) => void;
+  onToggle: (itemId: string) => void;
+  onSetLevel: (itemId: string, level: number) => void;
+  onSetQuantity: (itemId: string, qty: number) => void;
+  onMarkCrafted: (itemId: string) => void;
 }
 
-export function BlueprintCard({ blueprint, selection, onToggle, onSetRank, onSetQuantity, onMarkCrafted }: Props) {
+export function BlueprintCard({ item, selection, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
   const isSelected = !!selection;
-  const availableRanks = blueprint.ranks.map(r => r.rank);
+  const availableLevels = item.upgrades?.map(u => u.level) ?? [];
   const quantity = selection?.quantity ?? 1;
 
   return (
@@ -27,19 +26,14 @@ export function BlueprintCard({ blueprint, selection, onToggle, onSetRank, onSet
         <input
           type="checkbox"
           checked={isSelected}
-          onChange={() => onToggle(blueprint.id)}
+          onChange={() => onToggle(item.id)}
           className="mt-0.5 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 focus:ring-offset-transparent"
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className={`text-sm font-semibold ${rarityColor(blueprint.rarity)}`}>
-              {blueprint.name}
-            </span>
-            <span className={`text-xs px-1.5 py-0.5 rounded ${rarityBadgeColor(blueprint.rarity)}`}>
-              {capitalize(blueprint.rarity)}
-            </span>
-            {blueprint.ammo_type && (
-              <span className="text-xs text-gray-500">{blueprint.ammo_type}</span>
+            <span className="text-sm font-semibold text-gray-200">{item.name}</span>
+            {item.ammo_type && (
+              <span className="text-xs text-gray-500">{item.ammo_type}</span>
             )}
           </div>
         </div>
@@ -48,27 +42,27 @@ export function BlueprintCard({ blueprint, selection, onToggle, onSetRank, onSet
       {isSelected && selection && (
         <div className="mt-2 pl-5 space-y-2">
           <RankSelector
-            availableRanks={availableRanks}
-            selectedRank={selection.target_rank}
-            onSetRank={(rank) => onSetRank(blueprint.id, rank)}
+            availableLevels={availableLevels}
+            selectedLevel={selection.target_level}
+            onSetLevel={(level) => onSetLevel(item.id, level)}
           />
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400">Qty:</span>
             <button
-              onClick={() => onSetQuantity(blueprint.id, quantity - 1)}
+              onClick={() => onSetQuantity(item.id, quantity - 1)}
               className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
             >
               −
             </button>
             <span className="text-sm text-gray-200 w-6 text-center">{quantity}</span>
             <button
-              onClick={() => onSetQuantity(blueprint.id, quantity + 1)}
+              onClick={() => onSetQuantity(item.id, quantity + 1)}
               className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
             >
               +
             </button>
             <button
-              onClick={() => onMarkCrafted(blueprint.id)}
+              onClick={() => onMarkCrafted(item.id)}
               disabled={quantity === 0}
               className="ml-2 text-xs px-2 py-1 rounded bg-green-800/50 hover:bg-green-700/60 text-green-300 border border-green-700/50 disabled:opacity-40 disabled:cursor-not-allowed"
             >

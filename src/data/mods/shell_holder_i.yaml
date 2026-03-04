@@ -1,8 +1,0 @@
-id: shell_holder_i
-name: "Shell Holder I"
-slot: stock
-ingredients:
-  - material_id: heavy_gun_parts
-    quantity: 1
-  - material_id: polymer
-    quantity: 2
