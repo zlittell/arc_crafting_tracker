@@ -7,9 +7,10 @@ interface Props {
   materials: ResolvedMaterial[];
   collected: Record<string, number>;
   onSetCollected: (materialId: string, count: number) => void;
+  onRefineMaterial: (materialId: string) => void;
 }
 
-export function MaterialGroup({ rarity, materials, collected, onSetCollected }: Props) {
+export function MaterialGroup({ rarity, materials, collected, onSetCollected, onRefineMaterial }: Props) {
   const completedCount = materials.filter(m => (collected[m.material_id] ?? 0) >= m.quantity).length;
 
   return (
@@ -27,8 +28,9 @@ export function MaterialGroup({ rarity, materials, collected, onSetCollected }: 
           <MaterialRow
             key={material.material_id}
             material={material}
-            collected={collected[material.material_id] ?? 0}
+            allCollected={collected}
             onSetCollected={onSetCollected}
+            onRefineMaterial={onRefineMaterial}
           />
         ))}
       </div>

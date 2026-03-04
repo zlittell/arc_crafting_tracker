@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import type { LoadoutSelection, ResolutionMode } from './types/resolver';
-import { BLUEPRINT_REGISTRY } from './lib/loader';
+import type { LoadoutSelection } from './types/resolver';
+import { BLUEPRINT_REGISTRY, MATERIAL_REGISTRY } from './lib/loader';
 import { resolveShoppingList } from './lib/resolver';
 import { Layout } from './components/layout/Layout';
 import { Header } from './components/layout/Header';
@@ -10,7 +10,6 @@ import { ShoppingList } from './components/shopping/ShoppingList';
 export default function App() {
   const [selections, setSelections] = useState<LoadoutSelection[]>([]);
   const [modQuantities, setModQuantities] = useState<Record<string, number>>({});
-  const [mode, setMode] = useState<ResolutionMode>('craftable');
   const [collected, setCollected] = useState<Record<string, number>>(
     () => JSON.parse(localStorage.getItem('arc_collected') ?? '{}')
   );
@@ -20,8 +19,8 @@ export default function App() {
   }, [collected]);
 
   const shoppingList = useMemo(
-    () => resolveShoppingList(selections, modQuantities, mode),
-    [selections, modQuantities, mode]
+    () => resolveShoppingList(selections, modQuantities, 'craftable'),
+    [selections, modQuantities]
   );
 
   function handleToggleBlueprint(blueprintId: string) {
@@ -66,9 +65,7 @@ export default function App() {
   function handleMarkBlueprintCrafted(blueprintId: string) {
     const selection = selections.find(s => s.blueprint_id === blueprintId);
     if (!selection) return;
-
-    // Cost of one craft
-    const oneCraft = resolveShoppingList([{ ...selection, quantity: 1 }], {}, mode);
+    const oneCraft = resolveShoppingList([{ ...selection, quantity: 1 }], {}, 'craftable');
     setCollected(prev => {
       const next = { ...prev };
       for (const mat of oneCraft.materials) {
@@ -82,8 +79,7 @@ export default function App() {
   function handleMarkModCrafted(modId: string) {
     const qty = modQuantities[modId];
     if (!qty) return;
-
-    const oneCraft = resolveShoppingList([], { [modId]: 1 }, mode);
+    const oneCraft = resolveShoppingList([], { [modId]: 1 }, 'craftable');
     setCollected(prev => {
       const next = { ...prev };
       for (const mat of oneCraft.materials) {
@@ -92,6 +88,19 @@ export default function App() {
       return next;
     });
     handleSetModQuantity(modId, qty - 1);
+  }
+
+  function handleRefineMaterial(materialId: string) {
+    const material = MATERIAL_REGISTRY.get(materialId);
+    if (!material?.craft_recipe) return;
+    setCollected(prev => {
+      const next = { ...prev };
+      for (const ing of material.craft_recipe!.ingredients) {
+        next[ing.material_id] = Math.max(0, (next[ing.material_id] ?? 0) - ing.quantity);
+      }
+      next[materialId] = (next[materialId] ?? 0) + 1;
+      return next;
+    });
   }
 
   function handleSetCollected(materialId: string, count: number) {
@@ -104,7 +113,7 @@ export default function App() {
 
   return (
     <Layout
-      header={<Header mode={mode} onSetMode={setMode} />}
+      header={<Header />}
       left={
         <LoadoutSelector
           selections={selections}
@@ -124,6 +133,7 @@ export default function App() {
           collected={collected}
           onSetCollected={handleSetCollected}
           onClearCollected={handleClearCollected}
+          onRefineMaterial={handleRefineMaterial}
         />
       }
     />

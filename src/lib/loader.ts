@@ -29,18 +29,19 @@ function loadMods(): Map<string, Mod> {
   return registry;
 }
 
-interface MaterialFileContent {
-  materials: Material[];
-}
-
 function loadMaterials(): Map<string, Material> {
   const registry = new Map<string, Material>();
   for (const [, raw] of Object.entries(materialModules)) {
-    const parsed = yaml.load(raw as string) as MaterialFileContent;
-    if (parsed?.materials) {
+    const parsed = yaml.load(raw as string) as { materials?: Material[] } | Material;
+    if (!parsed) continue;
+    // List format: { materials: [...] }
+    if ('materials' in parsed && Array.isArray(parsed.materials)) {
       for (const material of parsed.materials) {
-        registry.set(material.id, material);
+        if (material?.id) registry.set(material.id, material);
       }
+    // Individual format: { id: '...', name: '...', ... }
+    } else if ('id' in parsed && parsed.id) {
+      registry.set(parsed.id, parsed as Material);
     }
   }
   return registry;

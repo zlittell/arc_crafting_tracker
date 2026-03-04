@@ -10,9 +10,10 @@ interface Props {
   collected: Record<string, number>;
   onSetCollected: (materialId: string, count: number) => void;
   onClearCollected: () => void;
+  onRefineMaterial: (materialId: string) => void;
 }
 
-export function ShoppingList({ shoppingList, collected, onSetCollected, onClearCollected }: Props) {
+export function ShoppingList({ shoppingList, collected, onSetCollected, onClearCollected, onRefineMaterial }: Props) {
   const { materials } = shoppingList;
 
   if (materials.length === 0) {
@@ -61,6 +62,7 @@ export function ShoppingList({ shoppingList, collected, onSetCollected, onClearC
             materials={grouped[rarity] as ResolvedMaterial[]}
             collected={collected}
             onSetCollected={onSetCollected}
+            onRefineMaterial={onRefineMaterial}
           />
         ))}
         {/* Any rarities not in our defined order */}
@@ -73,6 +75,7 @@ export function ShoppingList({ shoppingList, collected, onSetCollected, onClearC
               materials={grouped[rarity] as ResolvedMaterial[]}
               collected={collected}
               onSetCollected={onSetCollected}
+              onRefineMaterial={onRefineMaterial}
             />
           ))}
       </div>
