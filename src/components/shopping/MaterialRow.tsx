@@ -59,6 +59,9 @@ export function MaterialRow({ material, collected, onSetCollected }: Props) {
       {/* Total needed */}
       <span className="text-sm text-gray-400 whitespace-nowrap">
         ×{material.quantity}
+        {material.per_craft_quantity !== material.quantity && (
+          <span className="text-xs text-gray-600 ml-1">(×{material.per_craft_quantity}/craft)</span>
+        )}
       </span>
 
       {/* Collection controls */}

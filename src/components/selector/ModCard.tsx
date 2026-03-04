@@ -1,0 +1,58 @@
+import type { Mod } from '../../types/mod';
+
+interface Props {
+  mod: Mod;
+  isSelected: boolean;
+  quantity: number;
+  onToggle: (modId: string) => void;
+  onSetQuantity: (modId: string, qty: number) => void;
+  onMarkCrafted: (modId: string) => void;
+}
+
+export function ModCard({ mod, isSelected, quantity, onToggle, onSetQuantity, onMarkCrafted }: Props) {
+
+  return (
+    <div className={`rounded-lg border p-3 transition-colors ${
+      isSelected
+        ? 'border-blue-600/50 bg-blue-950/20'
+        : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+    }`}>
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={() => onToggle(mod.id)}
+          className="rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 focus:ring-offset-transparent"
+        />
+        <span className="text-sm font-medium text-gray-200">{mod.name}</span>
+        <span className="ml-auto text-xs text-gray-500">{mod.slot}</span>
+      </label>
+
+      {isSelected && (
+        <div className="mt-2 pl-5 flex items-center gap-2">
+          <span className="text-xs text-gray-400">Qty:</span>
+          <button
+            onClick={() => onSetQuantity(mod.id, quantity - 1)}
+            className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
+          >
+            −
+          </button>
+          <span className="text-sm text-gray-200 w-6 text-center">{quantity}</span>
+          <button
+            onClick={() => onSetQuantity(mod.id, quantity + 1)}
+            className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
+          >
+            +
+          </button>
+          <button
+            onClick={() => onMarkCrafted(mod.id)}
+            disabled={quantity === 0}
+            className="ml-2 text-xs px-2 py-1 rounded bg-green-800/50 hover:bg-green-700/60 text-green-300 border border-green-700/50 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Crafted 1
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

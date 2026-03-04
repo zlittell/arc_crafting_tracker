@@ -29,9 +29,8 @@ src/
 │   ├── mod.ts          # Mod
 │   └── resolver.ts     # LoadoutSelection, ResolvedMaterial, ShoppingList
 ├── data/               # YAML game data (bundled at build time)
-│   ├── blueprints/
-│   │   ├── weapons/    # One .yaml file per weapon blueprint
-│   │   └── armor/      # One .yaml file per armor blueprint
+│   ├── weapons/        # One .yaml file per weapon blueprint
+│   ├── armor/          # One .yaml file per armor blueprint
 │   ├── mods/           # One .yaml file per mod (shared across blueprints)
 │   └── materials/      # List files: mechanical.yaml, electronics.yaml, raw.yaml
 ├── lib/
@@ -54,7 +53,7 @@ src/
 
 ### Adding blueprints / mods / materials
 
-- **New blueprint**: add `src/data/blueprints/<category>/<id>.yaml` following the schema below. Ranks are **incremental delta costs** — each rank lists only the *new* ingredients needed on top of the previous rank.
+- **New blueprint**: add `src/data/weapons/<id>.yaml` or `src/data/armor/<id>.yaml` following the schema below. Ranks are **incremental delta costs** — each rank lists only the *new* ingredients needed on top of the previous rank.
 - **New mod**: add `src/data/mods/<id>.yaml`.
 - **New material**: append to the appropriate `src/data/materials/<category>.yaml` list.
 
@@ -67,12 +66,10 @@ id: bobcat
 name: Bobcat
 category: weapon        # weapon | armor | tool
 rarity: epic            # common | uncommon | rare | epic | legendary
-blueprint_required: true
 
 ranks:
   - rank: 1
     label: "Bobcat I"
-    required_skill: "Gunsmith 3"
     ingredients:
       - material_id: light_gun_parts
         quantity: 3
@@ -87,7 +84,6 @@ compatible_mods:
 id: extended_light_mag_i
 name: "Extended Light Mag I"
 slot: light_mag
-required_skill: "Gunsmith 1"
 ingredients:
   - material_id: light_gun_parts
     quantity: 2

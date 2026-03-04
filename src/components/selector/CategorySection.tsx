@@ -10,10 +10,11 @@ interface Props {
   selections: LoadoutSelection[];
   onToggle: (blueprintId: string) => void;
   onSetRank: (blueprintId: string, rank: number) => void;
-  onToggleMod: (blueprintId: string, modId: string) => void;
+  onSetQuantity: (blueprintId: string, qty: number) => void;
+  onMarkCrafted: (blueprintId: string) => void;
 }
 
-export function CategorySection({ category, blueprints, selections, onToggle, onSetRank, onToggleMod }: Props) {
+export function CategorySection({ category, blueprints, selections, onToggle, onSetRank, onSetQuantity, onMarkCrafted }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const activeCount = blueprints.filter(b => selections.some(s => s.blueprint_id === b.id)).length;
 
@@ -43,7 +44,8 @@ export function CategorySection({ category, blueprints, selections, onToggle, on
               selection={selections.find(s => s.blueprint_id === blueprint.id)}
               onToggle={onToggle}
               onSetRank={onSetRank}
-              onToggleMod={onToggleMod}
+              onSetQuantity={onSetQuantity}
+              onMarkCrafted={onMarkCrafted}
             />
           ))}
         </div>

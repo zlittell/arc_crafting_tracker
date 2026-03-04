@@ -1,7 +1,6 @@
 id: shell_holder_i
 name: "Shell Holder I"
 slot: stock
-required_skill: "Gunsmith 1"
 ingredients:
   - material_id: heavy_gun_parts
     quantity: 1

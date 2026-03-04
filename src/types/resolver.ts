@@ -1,7 +1,7 @@
 export interface LoadoutSelection {
   blueprint_id: string;
   target_rank: number;
-  selected_mod_ids: string[];
+  quantity: number;
 }
 
 export type ResolutionMode = 'craftable' | 'raw';
@@ -18,6 +18,7 @@ export interface ResolvedMaterial {
   rarity: string;
   category: string;
   quantity: number;
+  per_craft_quantity: number;
   craft_recipe_available: boolean;
   sources: MaterialSource[];
 }

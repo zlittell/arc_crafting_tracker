@@ -1,7 +1,6 @@
 import type { Blueprint } from '../../types/blueprint';
 import type { LoadoutSelection } from '../../types/resolver';
 import { RankSelector } from './RankSelector';
-import { ModSelector } from './ModSelector';
 import { rarityColor, rarityBadgeColor, capitalize } from '../../lib/utils';
 
 interface Props {
@@ -9,12 +8,14 @@ interface Props {
   selection: LoadoutSelection | undefined;
   onToggle: (blueprintId: string) => void;
   onSetRank: (blueprintId: string, rank: number) => void;
-  onToggleMod: (blueprintId: string, modId: string) => void;
+  onSetQuantity: (blueprintId: string, qty: number) => void;
+  onMarkCrafted: (blueprintId: string) => void;
 }
 
-export function BlueprintCard({ blueprint, selection, onToggle, onSetRank, onToggleMod }: Props) {
+export function BlueprintCard({ blueprint, selection, onToggle, onSetRank, onSetQuantity, onMarkCrafted }: Props) {
   const isSelected = !!selection;
   const availableRanks = blueprint.ranks.map(r => r.rank);
+  const quantity = selection?.quantity ?? 1;
 
   return (
     <div className={`rounded-lg border p-3 transition-colors ${
@@ -40,25 +41,40 @@ export function BlueprintCard({ blueprint, selection, onToggle, onSetRank, onTog
             {blueprint.ammo_type && (
               <span className="text-xs text-gray-500">{blueprint.ammo_type}</span>
             )}
-            {blueprint.blueprint_required && (
-              <span className="text-xs text-orange-400/70">BP required</span>
-            )}
           </div>
         </div>
       </label>
 
       {isSelected && selection && (
-        <div className="mt-2 pl-5">
+        <div className="mt-2 pl-5 space-y-2">
           <RankSelector
             availableRanks={availableRanks}
             selectedRank={selection.target_rank}
             onSetRank={(rank) => onSetRank(blueprint.id, rank)}
           />
-          <ModSelector
-            compatibleMods={blueprint.compatible_mods}
-            selectedModIds={selection.selected_mod_ids}
-            onToggleMod={(modId) => onToggleMod(blueprint.id, modId)}
-          />
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400">Qty:</span>
+            <button
+              onClick={() => onSetQuantity(blueprint.id, quantity - 1)}
+              className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
+            >
+              −
+            </button>
+            <span className="text-sm text-gray-200 w-6 text-center">{quantity}</span>
+            <button
+              onClick={() => onSetQuantity(blueprint.id, quantity + 1)}
+              className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
+            >
+              +
+            </button>
+            <button
+              onClick={() => onMarkCrafted(blueprint.id)}
+              disabled={quantity === 0}
+              className="ml-2 text-xs px-2 py-1 rounded bg-green-800/50 hover:bg-green-700/60 text-green-300 border border-green-700/50 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Crafted 1
+            </button>
+          </div>
         </div>
       )}
     </div>

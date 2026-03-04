@@ -9,6 +9,7 @@ import { ShoppingList } from './components/shopping/ShoppingList';
 
 export default function App() {
   const [selections, setSelections] = useState<LoadoutSelection[]>([]);
+  const [modQuantities, setModQuantities] = useState<Record<string, number>>({});
   const [mode, setMode] = useState<ResolutionMode>('craftable');
   const [collected, setCollected] = useState<Record<string, number>>(
     () => JSON.parse(localStorage.getItem('arc_collected') ?? '{}')
@@ -19,8 +20,8 @@ export default function App() {
   }, [collected]);
 
   const shoppingList = useMemo(
-    () => resolveShoppingList(selections, mode),
-    [selections, mode]
+    () => resolveShoppingList(selections, modQuantities, mode),
+    [selections, modQuantities, mode]
   );
 
   function handleToggleBlueprint(blueprintId: string) {
@@ -31,7 +32,7 @@ export default function App() {
       }
       const blueprint = BLUEPRINT_REGISTRY.get(blueprintId);
       const defaultRank = blueprint?.ranks[0]?.rank ?? 1;
-      return [...prev, { blueprint_id: blueprintId, target_rank: defaultRank, selected_mod_ids: [] }];
+      return [...prev, { blueprint_id: blueprintId, target_rank: defaultRank, quantity: 1 }];
     });
   }
 
@@ -41,19 +42,56 @@ export default function App() {
     );
   }
 
-  function handleToggleMod(blueprintId: string, modId: string) {
+  function handleSetBlueprintQuantity(blueprintId: string, qty: number) {
     setSelections(prev =>
-      prev.map(s => {
-        if (s.blueprint_id !== blueprintId) return s;
-        const has = s.selected_mod_ids.includes(modId);
-        return {
-          ...s,
-          selected_mod_ids: has
-            ? s.selected_mod_ids.filter(id => id !== modId)
-            : [...s.selected_mod_ids, modId],
-        };
-      })
+      prev.map(s => s.blueprint_id === blueprintId ? { ...s, quantity: Math.max(0, qty) } : s)
     );
+  }
+
+  function handleToggleMod(modId: string) {
+    setModQuantities(prev => {
+      if (modId in prev) {
+        const next = { ...prev };
+        delete next[modId];
+        return next;
+      }
+      return { ...prev, [modId]: 1 };
+    });
+  }
+
+  function handleSetModQuantity(modId: string, qty: number) {
+    setModQuantities(prev => ({ ...prev, [modId]: Math.max(0, qty) }));
+  }
+
+  function handleMarkBlueprintCrafted(blueprintId: string) {
+    const selection = selections.find(s => s.blueprint_id === blueprintId);
+    if (!selection) return;
+
+    // Cost of one craft
+    const oneCraft = resolveShoppingList([{ ...selection, quantity: 1 }], {}, mode);
+    setCollected(prev => {
+      const next = { ...prev };
+      for (const mat of oneCraft.materials) {
+        next[mat.material_id] = Math.max(0, (next[mat.material_id] ?? 0) - mat.quantity);
+      }
+      return next;
+    });
+    handleSetBlueprintQuantity(blueprintId, selection.quantity - 1);
+  }
+
+  function handleMarkModCrafted(modId: string) {
+    const qty = modQuantities[modId];
+    if (!qty) return;
+
+    const oneCraft = resolveShoppingList([], { [modId]: 1 }, mode);
+    setCollected(prev => {
+      const next = { ...prev };
+      for (const mat of oneCraft.materials) {
+        next[mat.material_id] = Math.max(0, (next[mat.material_id] ?? 0) - mat.quantity);
+      }
+      return next;
+    });
+    handleSetModQuantity(modId, qty - 1);
   }
 
   function handleSetCollected(materialId: string, count: number) {
@@ -70,9 +108,14 @@ export default function App() {
       left={
         <LoadoutSelector
           selections={selections}
+          modQuantities={modQuantities}
           onToggle={handleToggleBlueprint}
           onSetRank={handleSetRank}
+          onSetBlueprintQuantity={handleSetBlueprintQuantity}
+          onMarkBlueprintCrafted={handleMarkBlueprintCrafted}
           onToggleMod={handleToggleMod}
+          onSetModQuantity={handleSetModQuantity}
+          onMarkModCrafted={handleMarkModCrafted}
         />
       }
       right={

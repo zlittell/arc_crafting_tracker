@@ -1,7 +1,6 @@
 id: ammo_pouch_i
 name: "Ammo Pouch I"
 slot: vest_module
-required_skill: "Armorsmith 1"
 ingredients:
   - material_id: polymer
     quantity: 3

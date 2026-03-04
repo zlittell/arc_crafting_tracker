@@ -1,7 +1,6 @@
 id: reflex_sight_i
 name: "Reflex Sight I"
 slot: optic
-required_skill: "Gunsmith 1"
 ingredients:
   - material_id: circuit_board
     quantity: 1

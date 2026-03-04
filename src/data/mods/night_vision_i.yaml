@@ -1,7 +1,6 @@
 id: night_vision_i
 name: "Night Vision I"
 slot: helmet_module
-required_skill: "Armorsmith 1"
 ingredients:
   - material_id: circuit_board
     quantity: 2

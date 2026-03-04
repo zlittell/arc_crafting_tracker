@@ -4,12 +4,10 @@ category: weapon
 subcategory: smg
 rarity: epic
 ammo_type: light
-blueprint_required: true
 
 ranks:
   - rank: 1
     label: "Bobcat I"
-    required_skill: "Gunsmith 3"
     ingredients:
       - material_id: magnetic_accelerator
         quantity: 1
@@ -20,7 +18,6 @@ ranks:
 
   - rank: 2
     label: "Bobcat II"
-    required_skill: "Gunsmith 1"
     ingredients:
       - material_id: advanced_mechanical_components
         quantity: 2
@@ -32,7 +29,6 @@ ranks:
 
   - rank: 3
     label: "Bobcat III"
-    required_skill: "Gunsmith 2"
     ingredients:
       - material_id: precision_parts
         quantity: 2
@@ -46,7 +42,6 @@ ranks:
 
   - rank: 4
     label: "Bobcat IV"
-    required_skill: "Gunsmith 4"
     ingredients:
       - material_id: high_caliber_parts
         quantity: 1

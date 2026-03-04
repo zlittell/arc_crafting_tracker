@@ -1,7 +1,6 @@
 id: medical_insert_i
 name: "Medical Insert I"
 slot: vest_module
-required_skill: "Armorsmith 1"
 ingredients:
   - material_id: medical_supplies
     quantity: 3

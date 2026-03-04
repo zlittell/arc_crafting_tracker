@@ -3,7 +3,7 @@ import type { Blueprint } from '../types/blueprint';
 import type { Mod } from '../types/mod';
 import type { Material } from '../types/material';
 
-const blueprintModules = import.meta.glob('../data/blueprints/**/*.yaml', { eager: true, query: '?raw', import: 'default' });
+const blueprintModules = import.meta.glob('../data/{weapons,armor,tools}/**/*.yaml', { eager: true, query: '?raw', import: 'default' });
 const modModules = import.meta.glob('../data/mods/**/*.yaml', { eager: true, query: '?raw', import: 'default' });
 const materialModules = import.meta.glob('../data/materials/**/*.yaml', { eager: true, query: '?raw', import: 'default' });
 

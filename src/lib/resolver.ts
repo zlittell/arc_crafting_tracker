@@ -1,29 +1,31 @@
-import type { Ingredient } from '../types/material';
 import type { LoadoutSelection, ResolutionMode, ResolvedMaterial, MaterialSource, ShoppingList } from '../types/resolver';
 import { BLUEPRINT_REGISTRY, MOD_REGISTRY, MATERIAL_REGISTRY } from './loader';
 
 interface Accumulator {
   quantity: number;
+  per_craft_quantity: number;
   sources: MaterialSource[];
 }
 
 function expandIngredient(
-  ingredient: Ingredient,
+  material_id: string,
+  totalQty: number,
+  unitQty: number,
   mode: ResolutionMode,
   source: MaterialSource,
   accumulator: Map<string, Accumulator>,
   visited: Set<string>
 ): void {
-  const { material_id, quantity } = ingredient;
   const material = MATERIAL_REGISTRY.get(material_id);
 
   if (mode === 'raw' && material?.craft_recipe && !visited.has(material_id)) {
-    // Recurse into sub-ingredients, scaled by quantity needed
     const visited2 = new Set(visited);
     visited2.add(material_id);
-    for (const subIngredient of material.craft_recipe.ingredients) {
+    for (const sub of material.craft_recipe.ingredients) {
       expandIngredient(
-        { material_id: subIngredient.material_id, quantity: subIngredient.quantity * quantity },
+        sub.material_id,
+        sub.quantity * totalQty,
+        sub.quantity * unitQty,
         mode,
         source,
         accumulator,
@@ -31,15 +33,16 @@ function expandIngredient(
       );
     }
   } else {
-    // Accumulate this material directly
     const existing = accumulator.get(material_id);
     if (existing) {
-      existing.quantity += quantity;
-      existing.sources.push({ ...source, quantity });
+      existing.quantity += totalQty;
+      existing.per_craft_quantity += unitQty;
+      existing.sources.push({ ...source, quantity: totalQty });
     } else {
       accumulator.set(material_id, {
-        quantity,
-        sources: [{ ...source, quantity }],
+        quantity: totalQty,
+        per_craft_quantity: unitQty,
+        sources: [{ ...source, quantity: totalQty }],
       });
     }
   }
@@ -62,6 +65,7 @@ function raritySort(a: ResolvedMaterial, b: ResolvedMaterial): number {
 
 export function resolveShoppingList(
   selections: LoadoutSelection[],
+  modQuantities: Record<string, number>,
   mode: ResolutionMode
 ): ShoppingList {
   const accumulator = new Map<string, Accumulator>();
@@ -69,41 +73,19 @@ export function resolveShoppingList(
   for (const selection of selections) {
     const blueprint = BLUEPRINT_REGISTRY.get(selection.blueprint_id);
     if (!blueprint) continue;
+    const qty = selection.quantity ?? 1;
 
-    // Collect ingredients from ranks 1..target_rank (all delta costs summed)
     for (let rankNum = 1; rankNum <= selection.target_rank; rankNum++) {
       const rankData = blueprint.ranks.find(r => r.rank === rankNum);
       if (!rankData) continue;
 
       for (const ingredient of rankData.ingredients) {
         expandIngredient(
-          ingredient,
+          ingredient.material_id,
+          ingredient.quantity * qty,
+          ingredient.quantity,
           mode,
-          {
-            blueprint_name: blueprint.name,
-            context: rankData.label,
-            quantity: ingredient.quantity,
-          },
-          accumulator,
-          new Set()
-        );
-      }
-    }
-
-    // Collect mod ingredients
-    for (const modId of selection.selected_mod_ids) {
-      const mod = MOD_REGISTRY.get(modId);
-      if (!mod) continue;
-
-      for (const ingredient of mod.ingredients) {
-        expandIngredient(
-          ingredient,
-          mode,
-          {
-            blueprint_name: blueprint.name,
-            context: `Mod: ${mod.name}`,
-            quantity: ingredient.quantity,
-          },
+          { blueprint_name: blueprint.name, context: rankData.label, quantity: ingredient.quantity * qty },
           accumulator,
           new Set()
         );
@@ -111,7 +93,23 @@ export function resolveShoppingList(
     }
   }
 
-  // Convert accumulator to ResolvedMaterial[]
+  for (const [modId, modQty] of Object.entries(modQuantities)) {
+    const mod = MOD_REGISTRY.get(modId);
+    if (!mod) continue;
+
+    for (const ingredient of mod.ingredients) {
+      expandIngredient(
+        ingredient.material_id,
+        ingredient.quantity * modQty,
+        ingredient.quantity,
+        mode,
+        { blueprint_name: mod.name, context: 'Mod', quantity: ingredient.quantity * modQty },
+        accumulator,
+        new Set()
+      );
+    }
+  }
+
   const materials: ResolvedMaterial[] = [];
   for (const [material_id, acc] of accumulator) {
     const material = MATERIAL_REGISTRY.get(material_id);
@@ -121,6 +119,7 @@ export function resolveShoppingList(
       rarity: material?.rarity ?? 'common',
       category: material?.category ?? 'unknown',
       quantity: acc.quantity,
+      per_craft_quantity: acc.per_craft_quantity,
       craft_recipe_available: !!material?.craft_recipe,
       sources: acc.sources,
     });
