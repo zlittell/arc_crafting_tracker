@@ -13,7 +13,11 @@
       "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f[''name'']\\) for f in data]\")",
       "Bash(python3:*)",
       "Bash(git add src/data/ src/schemas/item-list.schema.json docs/ src/types/item.ts src/lib/loader.ts)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run build)",
+      "Bash(git submodule add https://github.com/RaidTheory/arcraiders-data.git data/arcraiders-data)",
+      "Bash(node -e \":*)",
+      "Bash(npm run sync)"
     ]
   }
 }
