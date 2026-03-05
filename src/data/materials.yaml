@@ -67,24 +67,47 @@ items:
 
   - id: advanced_mechanical_components
     name: Advanced Mechanical Components
+    craft_recipe:
+      ingredients:
+        - { material_id: mechanical_components, quantity: 2 }
+        - { material_id: steel_spring, quantity: 2 }
 
   - id: electrical_components
     name: Electrical Components
+    craft_recipe:
+      ingredients:
+        - { material_id: plastic_parts, quantity: 8 }
+        - { material_id: rubber_parts, quantity: 4 }
 
   - id: advanced_electrical_components
     name: Advanced Electrical Components
+    craft_recipe:
+      ingredients:
+        - { material_id: electrical_components, quantity: 2 }
+        - { material_id: wires, quantity: 3 }
 
   - id: mod_components
     name: Mod Components
+    craft_recipe:
+      ingredients:
+        - { material_id: mechanical_components, quantity: 2 }
+        - { material_id: steel_spring, quantity: 2 }
 
   - id: processor
     name: Processor
 
   - id: crude_explosives
     name: Crude Explosives
+    craft_recipe:
+      ingredients:
+        - { material_id: chemicals, quantity: 6 }
 
   - id: explosive_compound
     name: Explosive Compound
+    craft_recipe:
+      ingredients:
+        - { material_id: crude_explosives, quantity: 2 }
+        - { material_id: oil, quantity: 2 }
 
   # === ARC Materials ===
   - id: arc_powercell
