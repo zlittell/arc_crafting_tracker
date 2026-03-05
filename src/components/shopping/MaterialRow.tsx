@@ -130,13 +130,27 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
             const hasEnough = ingCollected >= ing.quantity;
             return (
               <div key={ing.material_id} className="flex items-center gap-2 text-xs">
-                <span className="flex-1 text-gray-300">
+                <span className={`flex-1 text-gray-300 ${hasEnough ? 'line-through opacity-50' : ''}`}>
                   {mat?.name ?? ing.material_id}
                 </span>
-                <span className="text-gray-400">×{ing.quantity}</span>
-                <span className={hasEnough ? 'text-green-400' : 'text-gray-500'}>
-                  ({ingCollected} collected)
-                </span>
+                <span className="text-gray-500">×{ing.quantity}</span>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => onSetCollected(ing.material_id, Math.max(0, ingCollected - 1))}
+                    className="w-5 h-5 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 leading-none"
+                  >
+                    −
+                  </button>
+                  <span className={`w-5 text-center tabular-nums ${hasEnough ? 'text-green-400' : 'text-gray-400'}`}>
+                    {ingCollected}
+                  </span>
+                  <button
+                    onClick={() => onSetCollected(ing.material_id, ingCollected + 1)}
+                    className="w-5 h-5 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 leading-none"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             );
           })}
