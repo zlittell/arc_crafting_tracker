@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { ShoppingList as ShoppingListType, ResolvedMaterial } from '../../types/resolver';
 import { MaterialGroup } from './MaterialGroup';
 
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function ShoppingList({ shoppingList, collected, onSetCollected, onClearCollected, onRefineMaterial }: Props) {
+  const [expandAll, setExpandAll] = useState(false);
   const { materials } = shoppingList;
 
   if (materials.length === 0) {
@@ -42,12 +44,22 @@ export function ShoppingList({ shoppingList, collected, onSetCollected, onClearC
             />
           </div>
         </div>
-        <button
-          onClick={onClearCollected}
-          className="text-xs text-gray-500 hover:text-gray-300 px-2 py-1 rounded border border-gray-700 hover:border-gray-500 transition-colors"
-        >
-          Clear collected
-        </button>
+        <div className="flex items-center gap-2">
+          {craft.length > 0 && (
+            <button
+              onClick={() => setExpandAll(e => !e)}
+              className="text-xs text-gray-400 hover:text-gray-200 px-2 py-1 rounded border border-gray-700 hover:border-gray-500 transition-colors"
+            >
+              {expandAll ? 'Collapse recipes' : 'Expand recipes'}
+            </button>
+          )}
+          <button
+            onClick={onClearCollected}
+            className="text-xs text-gray-500 hover:text-gray-300 px-2 py-1 rounded border border-gray-700 hover:border-gray-500 transition-colors"
+          >
+            Clear collected
+          </button>
+        </div>
       </div>
 
       {/* Material groups */}
@@ -57,6 +69,7 @@ export function ShoppingList({ shoppingList, collected, onSetCollected, onClearC
             label="Gather"
             materials={gather}
             collected={collected}
+            expandAll={false}
             onSetCollected={onSetCollected}
             onRefineMaterial={onRefineMaterial}
           />
@@ -66,6 +79,7 @@ export function ShoppingList({ shoppingList, collected, onSetCollected, onClearC
             label="Craft"
             materials={craft as ResolvedMaterial[]}
             collected={collected}
+            expandAll={expandAll}
             onSetCollected={onSetCollected}
             onRefineMaterial={onRefineMaterial}
           />

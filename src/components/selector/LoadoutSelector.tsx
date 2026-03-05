@@ -24,10 +24,16 @@ export function LoadoutSelector({
   onSetItemQuantity, onMarkItemCrafted,
   onToggleMod, onSetModQuantity, onMarkModCrafted,
 }: Props) {
-  const [modsCollapsed, setModsCollapsed] = useState(false);
+  const [modsCollapsed, setModsCollapsed] = useState(true);
+  const [search, setSearch] = useState('');
 
+  const searchLower = search.toLowerCase();
   const allItems = Array.from(ITEM_REGISTRY.values());
-  const upgradeableItems = allItems.filter(i => i.upgrades);
+
+  const upgradeableItems = allItems
+    .filter(i => i.upgrades)
+    .filter(i => !search || i.name.toLowerCase().includes(searchLower));
+
   const grouped = groupBy(upgradeableItems, i => i.category);
 
   const orderedCategories = [
@@ -35,68 +41,92 @@ export function LoadoutSelector({
     ...Object.keys(grouped).filter(c => !UPGRADEABLE_CATEGORY_ORDER.includes(c)),
   ];
 
-  const mods = allItems.filter(i => i.category === 'weapon_mod');
+  const mods = allItems
+    .filter(i => i.category === 'weapon_mod')
+    .filter(i => !search || i.name.toLowerCase().includes(searchLower));
+
   const groupedMods = groupBy(mods, m => m.slot ?? 'other');
   const activeModCount = Object.keys(modQuantities).length;
+  const searchActive = search.length > 0;
+  const showModsContent = !modsCollapsed || (searchActive && mods.length > 0);
 
   return (
-    <div className="flex-1 overflow-y-auto px-1">
-      {orderedCategories.map(category => (
-        <CategorySection
-          key={category}
-          category={category}
-          items={grouped[category]}
-          selections={selections}
-          onToggle={onToggleItem}
-          onSetLevel={onSetLevel}
-          onSetQuantity={onSetItemQuantity}
-          onMarkCrafted={onMarkItemCrafted}
+    <div className="flex flex-col flex-1 overflow-hidden">
+      {/* Search box */}
+      <div className="px-1 pb-3">
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search items and mods…"
+          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-1.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
         />
-      ))}
+      </div>
 
-      {mods.length > 0 && (
-        <div className="mb-5">
-          <button
-            onClick={() => setModsCollapsed(c => !c)}
-            className="flex items-center gap-2 w-full text-left mb-2 group"
-          >
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-gray-300 transition-colors">
-              Mods
-            </span>
-            {activeModCount > 0 && (
-              <span className="text-xs bg-blue-600/30 text-blue-400 px-1.5 py-0.5 rounded-full border border-blue-600/50">
-                {activeModCount}
+      {/* Scrollable list */}
+      <div className="flex-1 overflow-y-auto px-1">
+        {orderedCategories.map(category => (
+          <CategorySection
+            key={category}
+            category={category}
+            items={grouped[category]}
+            selections={selections}
+            forceExpanded={searchActive}
+            onToggle={onToggleItem}
+            onSetLevel={onSetLevel}
+            onSetQuantity={onSetItemQuantity}
+            onMarkCrafted={onMarkItemCrafted}
+          />
+        ))}
+
+        {mods.length > 0 && (
+          <div className="mb-5">
+            <button
+              onClick={() => setModsCollapsed(c => !c)}
+              className="flex items-center gap-2 w-full text-left mb-2 group"
+            >
+              <span className="text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-gray-300 transition-colors">
+                Mods
               </span>
-            )}
-            <span className="ml-auto text-gray-600 text-xs">{modsCollapsed ? '▶' : '▼'}</span>
-          </button>
+              {activeModCount > 0 && (
+                <span className="text-xs bg-blue-600/30 text-blue-400 px-1.5 py-0.5 rounded-full border border-blue-600/50">
+                  {activeModCount}
+                </span>
+              )}
+              <span className="ml-auto text-gray-600 text-xs">{showModsContent ? '▼' : '▶'}</span>
+            </button>
 
-          {!modsCollapsed && (
-            <div className="space-y-4">
-              {Object.entries(groupedMods).map(([slot, slotMods]) => (
-                <div key={slot}>
-                  <div className="text-xs text-gray-600 uppercase tracking-wide mb-1 pl-1">
-                    {capitalize(slot.replace(/_/g, ' '))}
+            {showModsContent && (
+              <div className="space-y-4">
+                {Object.entries(groupedMods).map(([slot, slotMods]) => (
+                  <div key={slot}>
+                    <div className="text-xs text-gray-600 uppercase tracking-wide mb-1 pl-1">
+                      {capitalize(slot.replace(/_/g, ' '))}
+                    </div>
+                    <div className="space-y-2">
+                      {slotMods.map(mod => (
+                        <ModCard
+                          key={mod.id}
+                          mod={mod}
+                          isSelected={mod.id in modQuantities}
+                          quantity={modQuantities[mod.id] ?? 0}
+                          onToggle={onToggleMod}
+                          onSetQuantity={onSetModQuantity}
+                          onMarkCrafted={onMarkModCrafted}
+                        />
+                      ))}
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    {slotMods.map(mod => (
-                      <ModCard
-                        key={mod.id}
-                        mod={mod}
-                        isSelected={mod.id in modQuantities}
-                        quantity={modQuantities[mod.id] ?? 0}
-                        onToggle={onToggleMod}
-                        onSetQuantity={onSetModQuantity}
-                        onMarkCrafted={onMarkModCrafted}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {searchActive && orderedCategories.length === 0 && mods.length === 0 && (
+          <p className="text-sm text-gray-500 text-center py-8">No results for "{search}"</p>
+        )}
+      </div>
     </div>
   );
 }

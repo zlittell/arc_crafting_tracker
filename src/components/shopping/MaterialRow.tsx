@@ -5,11 +5,12 @@ import { ITEM_REGISTRY } from '../../lib/loader';
 interface Props {
   material: ResolvedMaterial;
   allCollected: Record<string, number>;
+  expandAll: boolean;
   onSetCollected: (materialId: string, count: number) => void;
   onRefineMaterial: (materialId: string) => void;
 }
 
-export function MaterialRow({ material, allCollected, onSetCollected, onRefineMaterial }: Props) {
+export function MaterialRow({ material, allCollected, expandAll, onSetCollected, onRefineMaterial }: Props) {
   const [showSources, setShowSources] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
@@ -20,6 +21,8 @@ export function MaterialRow({ material, allCollected, onSetCollected, onRefineMa
   const recipe = material.craft_recipe_available
     ? ITEM_REGISTRY.get(material.material_id)?.craft_recipe ?? null
     : null;
+
+  const showRecipe = recipe && (expandAll || expanded);
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const val = parseInt(e.target.value, 10);
@@ -45,7 +48,7 @@ export function MaterialRow({ material, allCollected, onSetCollected, onRefineMa
             className="text-gray-500 hover:text-gray-300 transition-colors w-4 shrink-0 text-xs"
             title="Toggle refinery recipe"
           >
-            {expanded ? '▼' : '▶'}
+            {showRecipe ? '▼' : '▶'}
           </button>
         ) : (
           <span className="w-4 shrink-0" />
@@ -115,7 +118,7 @@ export function MaterialRow({ material, allCollected, onSetCollected, onRefineMa
       </div>
 
       {/* Expanded refinery panel */}
-      {expanded && recipe && (
+      {showRecipe && (
         <div className="mx-3 mb-2 rounded border border-gray-600/50 bg-gray-900/60 px-3 py-2 space-y-1.5">
           <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
             Refinery recipe (yields 1)

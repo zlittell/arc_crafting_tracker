@@ -8,15 +8,17 @@ interface Props {
   category: string;
   items: Item[];
   selections: LoadoutSelection[];
+  forceExpanded?: boolean;
   onToggle: (itemId: string) => void;
   onSetLevel: (itemId: string, level: number) => void;
   onSetQuantity: (itemId: string, qty: number) => void;
   onMarkCrafted: (itemId: string) => void;
 }
 
-export function CategorySection({ category, items, selections, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
-  const [collapsed, setCollapsed] = useState(false);
+export function CategorySection({ category, items, selections, forceExpanded, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
+  const [collapsed, setCollapsed] = useState(true);
   const activeCount = items.filter(i => selections.some(s => s.item_id === i.id)).length;
+  const showContent = !collapsed || !!forceExpanded;
 
   return (
     <div className="mb-5">
@@ -32,10 +34,10 @@ export function CategorySection({ category, items, selections, onToggle, onSetLe
             {activeCount}
           </span>
         )}
-        <span className="ml-auto text-gray-600 text-xs">{collapsed ? '▶' : '▼'}</span>
+        <span className="ml-auto text-gray-600 text-xs">{showContent ? '▼' : '▶'}</span>
       </button>
 
-      {!collapsed && (
+      {showContent && (
         <div className="space-y-2">
           {items.map(item => (
             <BlueprintCard

@@ -6,7 +6,14 @@
       "WebFetch(domain:arctracker.io)",
       "WebFetch(domain:arcraiders.wiki)",
       "WebFetch(domain:metaforge.app)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(curl -s \"https://api.github.com/repos/RaidTheory/arcraiders-data/contents\")",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f[''name''], f[''type'']\\) for f in data]\")",
+      "Bash(curl -s \"https://api.github.com/repos/RaidTheory/arcraiders-data/contents/items\")",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f[''name'']\\) for f in data]\")",
+      "Bash(python3:*)",
+      "Bash(git add src/data/ src/schemas/item-list.schema.json docs/ src/types/item.ts src/lib/loader.ts)",
+      "Bash(git commit:*)"
     ]
   }
 }

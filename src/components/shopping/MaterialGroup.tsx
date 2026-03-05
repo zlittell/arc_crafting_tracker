@@ -5,11 +5,12 @@ interface Props {
   label: string;
   materials: ResolvedMaterial[];
   collected: Record<string, number>;
+  expandAll: boolean;
   onSetCollected: (materialId: string, count: number) => void;
   onRefineMaterial: (materialId: string) => void;
 }
 
-export function MaterialGroup({ label, materials, collected, onSetCollected, onRefineMaterial }: Props) {
+export function MaterialGroup({ label, materials, collected, expandAll, onSetCollected, onRefineMaterial }: Props) {
   const completedCount = materials.filter(m => (collected[m.material_id] ?? 0) >= m.quantity).length;
 
   return (
@@ -28,6 +29,7 @@ export function MaterialGroup({ label, materials, collected, onSetCollected, onR
             key={material.material_id}
             material={material}
             allCollected={collected}
+            expandAll={expandAll}
             onSetCollected={onSetCollected}
             onRefineMaterial={onRefineMaterial}
           />

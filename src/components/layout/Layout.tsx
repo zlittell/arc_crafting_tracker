@@ -15,7 +15,7 @@ export function Layout({ header, left, right }: Props) {
             <h2 className="text-sm font-semibold text-gray-300">Loadout Selector</h2>
             <p className="text-xs text-gray-500 mt-0.5">Choose blueprints, ranks, and mods</p>
           </div>
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 min-h-0 flex flex-col p-4">
             {left}
           </div>
         </div>
