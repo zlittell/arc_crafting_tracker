@@ -9,20 +9,63 @@
     "category": {
       "type": "string",
       "enum": [
-        "weapon",
-        "shield",
-        "augment",
-        "ammunition",
-        "weapon_mod",
-        "quick_use",
-        "key",
-        "crafting_material",
-        "misc"
+        "weapon", "shield", "augment", "ammunition",
+        "weapon_mod", "quick_use", "key", "crafting_material", "misc"
       ]
     },
     "items": {
       "type": "array",
-      "items": { "$ref": "item.schema.json#" }
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "additionalProperties": true,
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "subcategory": { "type": "string" },
+          "ammo_type": { "type": "string" },
+          "slot": { "type": "string" },
+          "craft_recipe": {
+            "type": "object",
+            "required": ["ingredients"],
+            "properties": {
+              "ingredients": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["material_id", "quantity"],
+                  "properties": {
+                    "material_id": { "type": "string" },
+                    "quantity": { "type": "integer", "minimum": 1 }
+                  }
+                }
+              }
+            }
+          },
+          "upgrades": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["level", "ingredients"],
+              "properties": {
+                "level": { "type": "integer", "minimum": 1 },
+                "label": { "type": "string" },
+                "ingredients": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["material_id", "quantity"],
+                    "properties": {
+                      "material_id": { "type": "string" },
+                      "quantity": { "type": "integer", "minimum": 1 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

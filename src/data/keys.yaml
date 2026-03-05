@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=../schemas/item-list.schema.json
+category: key
+items:
+  # === Blue Gate ===
+  - id: blue_gate_cellar_key
+    name: Blue Gate Cellar Key
+    subcategory: blue_gate
+  - id: blue_gate_communication_tower_key
+    name: Blue Gate Communication Tower Key
+    subcategory: blue_gate
+  - id: blue_gate_confiscation_room_key
+    name: Blue Gate Confiscation Room Key
+    subcategory: blue_gate
+  - id: blue_gate_village_key
+    name: Blue Gate Village Key
+    subcategory: blue_gate
+
+  # === Buried City ===
+  - id: buried_city_hospital_key
+    name: Buried City Hospital Key
+    subcategory: buried_city
+  - id: buried_city_jkv_employee_access_card
+    name: Buried City JKV Employee Access Card
+    subcategory: buried_city
+  - id: buried_city_residential_master_key
+    name: Buried City Residential Master Key
+    subcategory: buried_city
+  - id: buried_city_town_hall_key
+    name: Buried City Town Hall Key
+    subcategory: buried_city
+
+  # === Dam ===
+  - id: dam_control_tower_key
+    name: Dam Control Tower Key
+    subcategory: dam
+  - id: dam_controlled_access_zone_key
+    name: Dam Controlled Access Zone Key
+    subcategory: dam
+  - id: dam_staff_room_key
+    name: Dam Staff Room Key
+    subcategory: dam
+  - id: dam_surveillance_key
+    name: Dam Surveillance Key
+    subcategory: dam
+  - id: dam_testing_annex_key
+    name: Dam Testing Annex Key
+    subcategory: dam
+  - id: dam_utility_key
+    name: Dam Utility Key
+    subcategory: dam
+
+  # === Spaceport ===
+  - id: spaceport_container_storage_key
+    name: Spaceport Container Storage Key
+    subcategory: spaceport
+  - id: spaceport_control_tower_key
+    name: Spaceport Control Tower Key
+    subcategory: spaceport
+  - id: spaceport_trench_tower_key
+    name: Spaceport Trench Tower Key
+    subcategory: spaceport
+  - id: spaceport_warehouse_key
+    name: Spaceport Warehouse Key
+    subcategory: spaceport
+
+  # === Stella Montis ===
+  - id: stella_montis_archives_key
+    name: Stella Montis Archives Key
+    subcategory: stella_montis
+  - id: stella_montis_assembly_admin_key
+    name: Stella Montis Assembly Admin Key
+    subcategory: stella_montis
+  - id: stella_montis_medical_storage_key
+    name: Stella Montis Medical Storage Key
+    subcategory: stella_montis
+  - id: stella_montis_security_checkpoint_key
+    name: Stella Montis Security Checkpoint Key
+    subcategory: stella_montis
+
+  # === Other Keys ===
+  - id: flushing_terminal_key
+    name: Flushing Terminal Key
+  - id: patrol_car_key
+    name: Patrol Car Key
+  - id: raider_hatch_key
+    name: Raider Hatch Key
+
+  # === Security Codes ===
+  - id: ancient_fort_security_code
+    name: Ancient Fort Security Code
+    subcategory: security_code
+  - id: pilgrims_peak_security_code
+    name: Pilgrims Peak Security Code
+    subcategory: security_code
+  - id: raiders_refuge_security_code
+    name: Raiders Refuge Security Code
+    subcategory: security_code
+  - id: reinforced_reception_security_code
+    name: Reinforced Reception Security Code
+    subcategory: security_code

@@ -1,33 +1,106 @@
-# yaml-language-server: $schema=../schemas/materials-list.schema.json
+# yaml-language-server: $schema=../schemas/item-list.schema.json
 category: crafting_material
-materials:
-  # Topside (gather only)
-  - id: polymer
-    name: Polymer
+items:
+  # === Basic Materials ===
+  - id: metal_parts
+    name: Metal Parts
 
-  - id: carbon_fiber
-    name: Carbon Fiber
+  - id: rubber_parts
+    name: Rubber Parts
 
-  - id: ceramic_plating
-    name: Ceramic Plating
+  - id: plastic_parts
+    name: Plastic Parts
 
-  - id: salvaged_components
-    name: Salvaged Components
+  - id: chemicals
+    name: Chemicals
 
-  - id: medical_supplies
-    name: Medical Supplies
+  - id: wires
+    name: Wires
 
-  - id: arc_crystal
-    name: Arc Crystal
+  - id: oil
+    name: Oil
 
-  - id: scrap_metal
-    name: Scrap Metal
+  - id: fabric
+    name: Fabric
+
+  - id: rope
+    name: Rope
+
+  - id: duct_tape
+    name: Duct Tape
+
+  - id: canister
+    name: Canister
+
+  - id: steel_spring
+    name: Steel Spring
+
+  - id: magnet
+    name: Magnet
+
+  - id: battery
+    name: Battery
+
+  # === Weapon Parts ===
+  - id: simple_gun_parts
+    name: Simple Gun Parts
 
   - id: light_gun_parts
     name: Light Gun Parts
 
+  - id: medium_gun_parts
+    name: Medium Gun Parts
+
   - id: heavy_gun_parts
     name: Heavy Gun Parts
+
+  - id: complex_gun_parts
+    name: Complex Gun Parts
+
+  # === Refined Materials ===
+  - id: mechanical_components
+    name: Mechanical Components
+    craft_recipe:
+      ingredients:
+        - { material_id: metal_parts, quantity: 7 }
+        - { material_id: rubber_parts, quantity: 3 }
+
+  - id: advanced_mechanical_components
+    name: Advanced Mechanical Components
+
+  - id: electrical_components
+    name: Electrical Components
+
+  - id: advanced_electrical_components
+    name: Advanced Electrical Components
+
+  - id: mod_components
+    name: Mod Components
+
+  - id: processor
+    name: Processor
+
+  - id: crude_explosives
+    name: Crude Explosives
+
+  - id: explosive_compound
+    name: Explosive Compound
+
+  # === ARC Materials ===
+  - id: arc_powercell
+    name: Arc Powercell
+
+  - id: advanced_arc_powercell
+    name: Advanced Arc Powercell
+
+  - id: arc_alloy
+    name: Arc Alloy
+
+  - id: arc_circuitry
+    name: Arc Circuitry
+
+  - id: arc_motion_core
+    name: Arc Motion Core
 
   - id: magnetic_accelerator
     name: Magnetic Accelerator
@@ -35,100 +108,60 @@ materials:
   - id: exodus_modules
     name: Exodus Modules
 
-  - id: circuit_board
-    name: Circuit Board
+  - id: power_rod
+    name: Power Rod
 
-  - id: copper_wire
-    name: Copper Wire
+  - id: voltage_converter
+    name: Voltage Converter
 
-  - id: power_cell
-    name: Power Cell
+  # === ARC Enemy Drops ===
+  - id: queen_reactor
+    name: Queen Reactor
 
-  # Refined (craft recipe available)
-  - id: kevlar_weave
-    name: Kevlar Weave
-    craft_recipe:
-      ingredients:
-        - material_id: carbon_fiber
-          quantity: 4
-        - material_id: polymer
-          quantity: 2
+  - id: matriarch_reactor
+    name: Matriarch Reactor
 
-  - id: composite_material
-    name: Composite Material
-    craft_recipe:
-      ingredients:
-        - material_id: kevlar_weave
-          quantity: 2
-        - material_id: ceramic_plating
-          quantity: 1
+  - id: hornet_driver
+    name: Hornet Driver
 
-  - id: refined_metal
-    name: Refined Metal
-    craft_recipe:
-      ingredients:
-        - material_id: scrap_metal
-          quantity: 4
+  - id: rocketeer_driver
+    name: Rocketeer Driver
 
-  - id: advanced_mechanical_components
-    name: Advanced Mechanical Components
-    craft_recipe:
-      ingredients:
-        - material_id: light_gun_parts
-          quantity: 3
-        - material_id: scrap_metal
-          quantity: 5
+  # === Medical / Organic ===
+  - id: antiseptic
+    name: Antiseptic
 
-  - id: precision_parts
-    name: Precision Parts
-    craft_recipe:
-      ingredients:
-        - material_id: light_gun_parts
-          quantity: 2
-        - material_id: refined_metal
-          quantity: 2
+  - id: syringe
+    name: Syringe
 
-  - id: reinforced_plating
-    name: Reinforced Plating
-    craft_recipe:
-      ingredients:
-        - material_id: scrap_metal
-          quantity: 8
-        - material_id: polymer
-          quantity: 3
+  - id: great_mullein
+    name: Great Mullein
 
-  - id: high_caliber_parts
-    name: High Caliber Parts
-    craft_recipe:
-      ingredients:
-        - material_id: heavy_gun_parts
-          quantity: 4
-        - material_id: advanced_mechanical_components
-          quantity: 2
+  - id: durable_cloth
+    name: Durable Cloth
 
-  - id: advanced_circuit_board
-    name: Advanced Circuit Board
-    craft_recipe:
-      ingredients:
-        - material_id: circuit_board
-          quantity: 3
-        - material_id: copper_wire
-          quantity: 4
+  - id: moss
+    name: Moss
 
-  - id: sensor_array
-    name: Sensor Array
-    craft_recipe:
-      ingredients:
-        - material_id: advanced_circuit_board
-          quantity: 2
-        - material_id: magnetic_accelerator
-          quantity: 1
+  - id: tick_pod
+    name: Tick Pod
 
-  - id: high_capacity_battery
-    name: High Capacity Battery
-    craft_recipe:
-      ingredients:
-        - material_id: power_cell
-          quantity: 3
-        - material_id: copper_wire
-          quantity: 2
+  # === Electronic Components ===
+  - id: sensors
+    name: Sensors
+
+  - id: speaker_component
+    name: Speaker Component
+
+  # === Explosive Components ===
+  - id: pop_trigger
+    name: Pop Trigger
+
+  - id: comet_igniter
+    name: Comet Igniter
+
+  - id: firefly_burner
+    name: Firefly Burner
+
+  - id: synthesized_fuel
+    name: Synthesized Fuel
