@@ -29,4 +29,7 @@ git tag "$TAG"
 echo "Pushing tag to origin..."
 git push origin "$TAG"
 
+echo "Updating release branch..."
+git push origin HEAD:release --force
+
 echo "Done. GitHub Actions will now build and deploy."

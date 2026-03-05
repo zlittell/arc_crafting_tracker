@@ -13,7 +13,7 @@ npm run preview   # preview the production build locally
 
 ## Releasing
 
-Tag the current commit and push it to kick off the GitHub Actions deploy pipeline:
+Tag the current commit and trigger the GitHub Actions deploy pipeline:
 
 ```bash
 bun run release 0.1.2
@@ -21,7 +21,7 @@ bun run release 0.1.2
 npm run release -- 0.1.2
 ```
 
-This creates and pushes a `release-v0.1.2` tag. GitHub Actions will build and deploy to GitHub Pages automatically.
+This creates a `release-v0.1.2` tag and updates the `release` branch, which triggers the GitHub Actions build and deploy to GitHub Pages.
 
 ## Keeping item data up to date
 
@@ -94,7 +94,7 @@ src/
 
 ## Deployment
 
-A GitHub Actions workflow (`.github/workflows/deploy.yml`) builds and deploys to GitHub Pages on every `release-v*.*.*` tag push. Use `npm run release` (see above) to trigger it.
+A GitHub Actions workflow (`.github/workflows/deploy.yml`) builds and deploys to GitHub Pages on every push to the `release` branch. Use `npm run release` (see above) to trigger it — the script tags the commit for version history and updates the `release` branch to kick off the pipeline.
 
 A `vercel.json` is also included for single-page app routing if deploying to Vercel instead.
 

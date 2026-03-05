@@ -2,8 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    tags:
-      - 'release-v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - release
   workflow_dispatch:
 
 permissions:
