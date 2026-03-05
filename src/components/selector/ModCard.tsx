@@ -14,7 +14,7 @@ export function ModCard({ mod, isSelected, quantity, onToggle, onSetQuantity, on
   return (
     <div className={`rounded-lg border p-3 transition-colors ${
       isSelected
-        ? 'border-blue-600/50 bg-blue-950/20'
+        ? 'border-arc-cyan/50 bg-arc-cyan/10'
         : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
     }`}>
       <label className="flex items-center gap-2 cursor-pointer">
@@ -22,7 +22,7 @@ export function ModCard({ mod, isSelected, quantity, onToggle, onSetQuantity, on
           type="checkbox"
           checked={isSelected}
           onChange={() => onToggle(mod.id)}
-          className="rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 focus:ring-offset-transparent"
+          className="rounded border-gray-600 bg-gray-700 text-arc-cyan focus:ring-arc-cyan focus:ring-offset-0 focus:ring-offset-transparent"
         />
         <span className="text-sm font-medium text-gray-200">{mod.name}</span>
         {mod.slot && <span className="ml-auto text-xs text-gray-500">{mod.slot}</span>}
@@ -47,7 +47,7 @@ export function ModCard({ mod, isSelected, quantity, onToggle, onSetQuantity, on
           <button
             onClick={() => onMarkCrafted(mod.id)}
             disabled={quantity === 0}
-            className="ml-2 text-xs px-2 py-1 rounded bg-green-800/50 hover:bg-green-700/60 text-green-300 border border-green-700/50 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="ml-2 text-xs px-2 py-1 rounded bg-arc-green/10 hover:bg-arc-green/20 text-arc-green border border-arc-green/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Crafted 1
           </button>

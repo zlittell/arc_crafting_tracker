@@ -1,4 +1,4 @@
-# Arc Crafting Tracker — Architecture
+# Arc Raiders Crafting Tracker — Architecture
 
 ## Purpose
 
@@ -8,11 +8,10 @@ A browser-based supply list tool for Arc Raiders. The user picks which items the
 
 | Layer | Tool |
 |---|---|
-| UI framework | React 18 + TypeScript |
+| UI framework | React 19 + TypeScript |
 | Build | Vite |
 | Styling | Tailwind CSS |
-| Data format | YAML (parsed at build time via `js-yaml` + Vite glob import) |
-| Schema validation | JSON Schema draft-07 (VS Code YAML extension) |
+| Data | Git submodule (`data/arcraiders-data/`) → generated TypeScript (`src/data/generated.ts`) |
 | Persistence | `localStorage` (collected material counts only) |
 
 ## Data Model
@@ -53,50 +52,34 @@ Weapons have 4 upgrade levels (I–IV). The `upgrades` array entries map as:
 
 The resolver accumulates all level costs up to and including the selected target level. Setting target level to 3 costs Level 1 craft + Level 2 upgrade + Level 3 upgrade.
 
-## Data Files
+## Data Pipeline
 
-All game data lives in [`src/data/`](../src/data/). Two file formats are supported:
+Game data lives in [`data/arcraiders-data/`](../data/arcraiders-data/) as a git submodule tracking [RaidTheory/arcraiders-data](https://github.com/RaidTheory/arcraiders-data). The sync script reads those JSON files and emits typed TypeScript:
 
-### Single-item files
-One YAML file per item. Used for individual weapons.
-```yaml
-# yaml-language-server: $schema=../schemas/item.schema.json
-id: bobcat
-name: Bobcat
-category: weapon
-upgrades:
-  - level: 1
-    ingredients: [...]
+```text
+data/arcraiders-data/items/*.json
+        ↓  npm run sync  (scripts/sync-data.ts)
+src/data/generated.ts   ← committed to repo, do not hand-edit
+        ↓  import at build time
+src/lib/loader.ts       → ITEM_REGISTRY (Map<id, Item>)
 ```
 
-### List files
-One YAML file per category containing all items of that type. Used for mods, augments, ammo, quick use, keys, and materials.
-```yaml
-# yaml-language-server: $schema=../schemas/item-list.schema.json
-category: weapon_mod
-items:
-  - id: compensator_i
-    name: Compensator I
-    slot: muzzle
-    craft_recipe:
-      ingredients: [...]
-```
-
-The legacy `materials.yaml` uses a `materials:` key instead of `items:` — both are supported by the loader.
+`src/data/generated.ts` is committed so that `npm run build` never requires the submodule. Run `npm run sync` after updating the submodule to regenerate it.
 
 ## Key Files
 
 | File | Role |
-|---|---|
-| `src/lib/loader.ts` | Reads all YAML files at build time, populates `ITEM_REGISTRY` |
+| --- | --- |
+| `scripts/sync-data.ts` | Reads submodule JSON → writes `src/data/generated.ts` |
+| `src/data/generated.ts` | AUTO-GENERATED — all items as typed TypeScript exports |
+| `src/lib/loader.ts` | Imports `generated.ts`, builds `ITEM_REGISTRY` (`Map<id, Item>`) |
 | `src/lib/resolver.ts` | Computes the shopping list from selections |
 | `src/lib/utils.ts` | `LEVEL_LABELS`, `groupBy`, `capitalize` |
 | `src/types/item.ts` | Core `Item` type and related interfaces |
-| `src/types/resolver.ts` | `LoadoutSelection`, `ShoppingList`, `ResolvedMaterial` |
+| `src/types/resolver.ts` | `CraftSelection`, `ShoppingList`, `ResolvedMaterial` |
 | `src/App.tsx` | Root state: selections, modQuantities, collected counts |
 | `src/components/selector/` | Left panel: item/mod pickers |
 | `src/components/shopping/` | Right panel: material shopping list |
-| `src/schemas/` | JSON Schema files for YAML validation |
 
 ## Shopping List Resolution
 
@@ -113,13 +96,13 @@ The UI currently uses `'craftable'` mode. The `MaterialRow` component lets users
 
 ## Component Tree
 
-```
+```text
 App
 ├── Layout
 │   ├── Header
-│   ├── LoadoutSelector (left panel)
+│   ├── CraftSelector (left panel)
 │   │   ├── CategorySection (per upgradeable category)
-│   │   │   └── ItemCard (per weapon)
+│   │   │   └── BlueprintCard (per weapon/item)
 │   │   │       └── RankSelector
 │   │   └── ModCard (per weapon mod)
 │   └── ShoppingList (right panel)
@@ -128,11 +111,12 @@ App
 │               └── (inline refinery panel)
 ```
 
-## Schemas
+## Release & Deployment
 
-Three JSON Schema files for VS Code YAML validation:
-- `item.schema.json` — validates single-item YAML files
-- `item-list.schema.json` — validates category list files (`items:` key)
-- `materials-list.schema.json` — legacy schema for `materials.yaml` (`materials:` key)
+Pushing a `release-v*.*.*` tag triggers `.github/workflows/deploy.yml`, which builds with Bun and deploys `dist/` to GitHub Pages.
 
-See [`.vscode/settings.json`](../.vscode/settings.json) for file-to-schema associations.
+```bash
+bun run release 0.1.2   # creates tag release-v0.1.2 and pushes it
+```
+
+See [`scripts/release.sh`](../scripts/release.sh) for the tagging script.

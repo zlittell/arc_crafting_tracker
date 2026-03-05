@@ -1,5 +1,5 @@
 {
-  "name": "arc_craft_tracker_temp",
+  "name": "arc-raiders-crafting-tracker",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "sync": "tsx scripts/sync-data.ts"
+    "sync": "tsx scripts/sync-data.ts",
+    "release": "bash scripts/release.sh"
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.11",

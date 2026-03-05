@@ -11,7 +11,13 @@ export default function App() {
   const [selections, setSelections] = useState<CraftSelection[]>([]);
   const [modQuantities, setModQuantities] = useState<Record<string, number>>({});
   const [collected, setCollected] = useState<Record<string, number>>(
-    () => JSON.parse(localStorage.getItem('arc_collected') ?? '{}')
+    () => {
+      try {
+        return JSON.parse(localStorage.getItem('arc_collected') ?? '{}');
+      } catch {
+        return {};
+      }
+    }
   );
 
   useEffect(() => {

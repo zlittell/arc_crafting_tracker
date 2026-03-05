@@ -15,14 +15,15 @@
 
 ---
 
-## ADR-002: Flat `src/data/` directory, category declared in YAML
+## ADR-002: Game data sourced from community submodule, compiled to TypeScript
 
-**Decision:** All YAML data files live in a single `src/data/` folder with no subdirectories. The item's category is declared as a field inside the file.
+**Decision:** Item data lives in `data/arcraiders-data/` as a git submodule ([RaidTheory/arcraiders-data](https://github.com/RaidTheory/arcraiders-data)). A dev-time script (`scripts/sync-data.ts`) reads those JSON files and writes `src/data/generated.ts`, which is committed to the repo. The loader imports the generated file at build time.
 
 **Rejected alternatives:**
-- Subdirectories per category (`src/data/weapons/`, `src/data/mods/`, etc.) — the loader inferred category from path, which is brittle and hides the item's category from the file itself
+- Hand-maintaining item data in `src/data/` — unsustainable as game content grows; community dataset is more accurate and better maintained
+- Fetching data at runtime from an API — adds a network dependency, latency, and requires a backend; this app is intentionally static
 
-**Rationale:** Flat structure with explicit `category` fields is easier to maintain and makes each file self-describing.
+**Rationale:** Committing `generated.ts` keeps the build fully self-contained (no submodule required at CI/build time) while still letting maintainers pull fresh game data on demand via `npm run sync`. The community dataset handles the accuracy burden.
 
 ---
 
@@ -72,13 +73,15 @@
 
 ---
 
-## ADR-008: Two list file formats, both supported
+## ADR-008: `generated.ts` committed to repo, not produced at build time
 
-**Decision:** The loader supports two list file structures:
-- `{ category, items: [...] }` — used by all new category list files
-- `{ category, materials: [...] }` — legacy format used by `materials.yaml`
+**Decision:** `src/data/generated.ts` is checked into the repository. The CI build (`npm run build`) does not run the sync script and does not require the submodule.
 
-**Rationale:** The `materials.yaml` file predates the generic list format. Rather than migrating it, the loader checks for both keys. New files use `items:`.
+**Rejected alternatives:**
+
+- Generate at CI build time — requires the submodule to be checked out in CI, adds a step to every build, and means a broken upstream submodule can silently break deploys
+
+**Rationale:** Treating generated data as a committed artifact separates two concerns: keeping data current (a maintainer decision, done locally via `npm run sync`) vs. building and deploying (fully deterministic from committed source). A stale `generated.ts` is a content problem, not a build problem.
 
 ---
 

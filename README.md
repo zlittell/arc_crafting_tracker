@@ -1,4 +1,4 @@
-# Arc Craft Tracker
+# Arc Raiders Crafting Tracker
 
 A crafting loadout planner for **Arc Raiders**. Select the gear you want (weapons, shields, augments, mods), choose a target upgrade rank, and the app aggregates all required materials into a single shopping list so you know exactly what to farm.
 
@@ -10,6 +10,18 @@ npm run dev       # dev server at http://localhost:5173
 npm run build     # production build → dist/
 npm run preview   # preview the production build locally
 ```
+
+## Releasing
+
+Tag the current commit and push it to kick off the GitHub Actions deploy pipeline:
+
+```bash
+bun run release 0.1.2
+# or
+npm run release -- 0.1.2
+```
+
+This creates and pushes a `release-v0.1.2` tag. GitHub Actions will build and deploy to GitHub Pages automatically.
 
 ## Keeping item data up to date
 
@@ -59,16 +71,16 @@ scripts/
 src/
 ├── types/
 │   ├── item.ts             # Item, Ingredient, UpgradeLevel
-│   └── resolver.ts         # LoadoutSelection, ResolvedMaterial, ShoppingList
+│   └── resolver.ts         # CraftSelection, ResolvedMaterial, ShoppingList
 ├── data/
 │   └── generated.ts        # AUTO-GENERATED — do not edit. Run: npm run sync
 ├── lib/
 │   ├── loader.ts           # imports generated.ts → ITEM_REGISTRY (Map<id, Item>)
-│   ├── resolver.ts         # aggregates ingredients for a loadout selection
+│   ├── resolver.ts         # aggregates ingredients for a craft selection
 │   └── utils.ts            # groupBy, capitalize
 └── components/
     ├── layout/             # Header, Layout (two-column shell)
-    ├── selector/           # LoadoutSelector, CategorySection, ItemCard, ModCard
+    ├── selector/           # CraftSelector, CategorySection, BlueprintCard, ModCard
     └── shopping/           # ShoppingList, MaterialGroup, MaterialRow
 ```
 
@@ -76,13 +88,15 @@ src/
 
 1. **Sync** (`npm run sync`): `scripts/sync-data.ts` reads all `*.json` files from `data/arcraiders-data/items/`, maps them to `Item[]`, and writes `src/data/generated.ts`.
 2. **Load**: `loader.ts` imports `ALL_ITEMS` from `generated.ts` and builds `ITEM_REGISTRY` (a `Map<id, Item>`).
-3. **Select**: User picks items and target upgrade levels in the left panel. State is `LoadoutSelection[]` in `App.tsx`, persisted to `localStorage`.
+3. **Select**: User picks items and target upgrade levels in the left panel. State is `CraftSelection[]` in `App.tsx`, persisted to `localStorage`.
 4. **Resolve**: `resolveShoppingList(selections)` sums ingredient costs across all selected upgrade levels and mods.
 5. **Display**: `ShoppingList` groups results into Gather / Craft sections; `MaterialRow` shows totals with collection counters and expandable refinery recipes.
 
 ## Deployment
 
-A `vercel.json` is included for single-page app routing on Vercel. Deploy by pushing to a repo connected to Vercel, or run `vercel --prod` in the project root.
+A GitHub Actions workflow (`.github/workflows/deploy.yml`) builds and deploys to GitHub Pages on every `release-v*.*.*` tag push. Use `npm run release` (see above) to trigger it.
+
+A `vercel.json` is also included for single-page app routing if deploying to Vercel instead.
 
 ## Data Attribution
 
