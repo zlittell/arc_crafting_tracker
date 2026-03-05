@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Item } from '../../types/item';
-import type { LoadoutSelection } from '../../types/resolver';
+import type { CraftSelection } from '../../types/resolver';
 import { BlueprintCard } from './BlueprintCard';
 import { capitalize } from '../../lib/utils';
 
@@ -8,7 +8,7 @@ interface Props {
   category: string;
   label?: string;
   items: Item[];
-  selections: LoadoutSelection[];
+  selections: CraftSelection[];
   forceExpanded?: boolean;
   onToggle: (itemId: string) => void;
   onSetLevel: (itemId: string, level: number) => void;
@@ -31,7 +31,7 @@ export function CategorySection({ category, label, items, selections, forceExpan
           {label ?? `${capitalize(category)}s`}
         </span>
         {activeCount > 0 && (
-          <span className="text-xs bg-blue-600/30 text-blue-400 px-1.5 py-0.5 rounded-full border border-blue-600/50">
+          <span className="text-xs bg-arc-cyan/20 text-arc-cyan px-1.5 py-0.5 rounded-full border border-arc-cyan/50">
             {activeCount}
           </span>
         )}

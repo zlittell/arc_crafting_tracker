@@ -1,10 +1,10 @@
 import type { Item } from '../../types/item';
-import type { LoadoutSelection } from '../../types/resolver';
+import type { CraftSelection } from '../../types/resolver';
 import { RankSelector } from './RankSelector';
 
 interface Props {
   item: Item;
-  selection: LoadoutSelection | undefined;
+  selection: CraftSelection | undefined;
   onToggle: (itemId: string) => void;
   onSetLevel: (itemId: string, level: number) => void;
   onSetQuantity: (itemId: string, qty: number) => void;
@@ -19,7 +19,7 @@ export function BlueprintCard({ item, selection, onToggle, onSetLevel, onSetQuan
   return (
     <div className={`rounded-lg border p-3 transition-colors ${
       isSelected
-        ? 'border-blue-600/50 bg-blue-950/20'
+        ? 'border-arc-cyan/50 bg-arc-cyan/10'
         : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
     }`}>
       <label className="flex items-start gap-2 cursor-pointer">
@@ -27,7 +27,7 @@ export function BlueprintCard({ item, selection, onToggle, onSetLevel, onSetQuan
           type="checkbox"
           checked={isSelected}
           onChange={() => onToggle(item.id)}
-          className="mt-0.5 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0 focus:ring-offset-transparent"
+          className="mt-0.5 rounded border-gray-600 bg-gray-700 text-arc-cyan focus:ring-arc-cyan focus:ring-offset-0 focus:ring-offset-transparent"
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -66,7 +66,7 @@ export function BlueprintCard({ item, selection, onToggle, onSetLevel, onSetQuan
             <button
               onClick={() => onMarkCrafted(item.id)}
               disabled={quantity === 0}
-              className="ml-2 text-xs px-2 py-1 rounded bg-green-800/50 hover:bg-green-700/60 text-green-300 border border-green-700/50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="ml-2 text-xs px-2 py-1 rounded bg-arc-green/10 hover:bg-arc-green/20 text-arc-green border border-arc-green/30 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Crafted 1
             </button>

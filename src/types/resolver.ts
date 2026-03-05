@@ -1,4 +1,4 @@
-export interface LoadoutSelection {
+export interface CraftSelection {
   item_id: string;
   target_level: number;
   quantity: number;

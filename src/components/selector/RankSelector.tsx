@@ -16,7 +16,7 @@ export function RankSelector({ availableLevels, selectedLevel, onSetLevel }: Pro
           onClick={() => onSetLevel(level)}
           className={`w-8 h-7 text-xs font-semibold rounded transition-colors ${
             selectedLevel === level
-              ? 'bg-blue-600 text-white'
+              ? 'bg-arc-cyan/20 border border-arc-cyan text-arc-cyan'
               : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
           }`}
         >

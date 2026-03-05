@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import type { LoadoutSelection } from '../../types/resolver';
+import type { CraftSelection } from '../../types/resolver';
 import { ITEM_REGISTRY } from '../../lib/loader';
 import { CategorySection } from './CategorySection';
 import { ModCard } from './ModCard';
 import { groupBy, capitalize } from '../../lib/utils';
 
 interface Props {
-  selections: LoadoutSelection[];
+  selections: CraftSelection[];
   modQuantities: Record<string, number>;
   onToggleItem: (itemId: string) => void;
   onSetLevel: (itemId: string, level: number) => void;
@@ -28,7 +28,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   crafting_material: 'Crafting Materials',
 };
 
-export function LoadoutSelector({
+export function CraftSelector({
   selections, modQuantities, onToggleItem, onSetLevel,
   onSetItemQuantity, onMarkItemCrafted,
   onToggleMod, onSetModQuantity, onMarkModCrafted,
@@ -68,7 +68,7 @@ export function LoadoutSelector({
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search items and mods…"
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-1.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-1.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-arc-cyan"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function LoadoutSelector({
                 Mods
               </span>
               {activeModCount > 0 && (
-                <span className="text-xs bg-blue-600/30 text-blue-400 px-1.5 py-0.5 rounded-full border border-blue-600/50">
+                <span className="text-xs bg-arc-cyan/20 text-arc-cyan px-1.5 py-0.5 rounded-full border border-arc-cyan/50">
                   {activeModCount}
                 </span>
               )}

@@ -39,7 +39,7 @@ export function ShoppingList({ shoppingList, collected, onSetCollected, onClearC
           </span>
           <div className="mt-1 h-1.5 bg-gray-700 rounded-full w-48">
             <div
-              className="h-full bg-green-500 rounded-full transition-all"
+              className="h-full bg-arc-green rounded-full transition-all"
               style={{ width: `${totalCount > 0 ? (collectedCount / totalCount) * 100 : 0}%` }}
             />
           </div>

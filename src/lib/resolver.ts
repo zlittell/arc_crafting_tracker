@@ -1,4 +1,4 @@
-import type { LoadoutSelection, ResolutionMode, ResolvedMaterial, MaterialSource, ShoppingList } from '../types/resolver';
+import type { CraftSelection, ResolutionMode, ResolvedMaterial, MaterialSource, ShoppingList } from '../types/resolver';
 import { ITEM_REGISTRY } from './loader';
 
 interface Accumulator {
@@ -49,7 +49,7 @@ function expandIngredient(
 }
 
 export function resolveShoppingList(
-  selections: LoadoutSelection[],
+  selections: CraftSelection[],
   modQuantities: Record<string, number>,
   mode: ResolutionMode
 ): ShoppingList {

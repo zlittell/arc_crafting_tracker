@@ -5,7 +5,7 @@ export function Header() {
         <h1 className="text-lg font-bold text-white tracking-tight">
           Arc Craft Tracker
         </h1>
-        <span className="text-xs text-gray-500 hidden sm:block">Arc Raiders loadout planner</span>
+        <span className="text-xs text-gray-500 hidden sm:block">Arc Raiders craft planner</span>
       </div>
     </header>
   );

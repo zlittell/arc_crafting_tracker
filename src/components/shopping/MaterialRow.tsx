@@ -109,9 +109,9 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
           </button>
           <span className="text-xs text-gray-500 w-8 text-right">
             {isComplete ? (
-              <span className="text-green-400">✓</span>
+              <span className="text-arc-green">✓</span>
             ) : (
-              <span className="text-yellow-500">{remaining}</span>
+              <span className="text-arc-yellow">{remaining}</span>
             )}
           </span>
         </div>
@@ -141,7 +141,7 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
                   >
                     −
                   </button>
-                  <span className={`w-5 text-center tabular-nums ${hasEnough ? 'text-green-400' : 'text-gray-400'}`}>
+                  <span className={`w-5 text-center tabular-nums ${hasEnough ? 'text-arc-green' : 'text-gray-400'}`}>
                     {ingCollected}
                   </span>
                   <button
@@ -157,7 +157,7 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
 
           <button
             onClick={() => onRefineMaterial(material.material_id)}
-            className="mt-1 text-xs px-2 py-1 rounded bg-amber-800/50 hover:bg-amber-700/60 text-amber-300 border border-amber-700/50"
+            className="mt-1 text-xs px-2 py-1 rounded bg-arc-yellow/10 hover:bg-arc-yellow/20 text-arc-yellow border border-arc-yellow/30"
           >
             Refine 1
           </button>

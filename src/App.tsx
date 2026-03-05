@@ -1,14 +1,14 @@
 import { useState, useMemo, useEffect } from 'react';
-import type { LoadoutSelection } from './types/resolver';
+import type { CraftSelection } from './types/resolver';
 import { ITEM_REGISTRY } from './lib/loader';
 import { resolveShoppingList } from './lib/resolver';
 import { Layout } from './components/layout/Layout';
 import { Header } from './components/layout/Header';
-import { LoadoutSelector } from './components/selector/LoadoutSelector';
+import { CraftSelector } from './components/selector/CraftSelector';
 import { ShoppingList } from './components/shopping/ShoppingList';
 
 export default function App() {
-  const [selections, setSelections] = useState<LoadoutSelection[]>([]);
+  const [selections, setSelections] = useState<CraftSelection[]>([]);
   const [modQuantities, setModQuantities] = useState<Record<string, number>>({});
   const [collected, setCollected] = useState<Record<string, number>>(
     () => JSON.parse(localStorage.getItem('arc_collected') ?? '{}')
@@ -113,7 +113,7 @@ export default function App() {
     <Layout
       header={<Header />}
       left={
-        <LoadoutSelector
+        <CraftSelector
           selections={selections}
           modQuantities={modQuantities}
           onToggleItem={handleToggleItem}
