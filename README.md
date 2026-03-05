@@ -86,4 +86,6 @@ A `vercel.json` is included for single-page app routing on Vercel. Deploy by pus
 
 ## Data Attribution
 
-Item data provided by the [arcraiders-data](https://github.com/RaidTheory/arcraiders-data) project. Arc Raiders is developed by [Embark Studios](https://www.embark-studios.com/). This tool is an unofficial fan project and is not affiliated with or endorsed by Embark Studios.
+Item data provided by the [arcraiders-data](https://github.com/RaidTheory/arcraiders-data) project, used under the [MIT License](https://github.com/RaidTheory/arcraiders-data/blob/main/LICENSE). Copyright (c) 2025 RaidTheory.
+
+Arc Raiders is developed by [Embark Studios](https://www.embark-studios.com/). This tool is an unofficial fan project and is not affiliated with or endorsed by Embark Studios.
