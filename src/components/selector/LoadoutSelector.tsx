@@ -19,6 +19,15 @@ interface Props {
 
 const UPGRADEABLE_CATEGORY_ORDER = ['weapon'];
 
+const CATEGORY_LABELS: Record<string, string> = {
+  weapon: 'Weapons',
+  shield: 'Shields',
+  augment: 'Augments',
+  ammunition: 'Ammunition',
+  quick_use: 'Quick Use',
+  crafting_material: 'Crafting Materials',
+};
+
 export function LoadoutSelector({
   selections, modQuantities, onToggleItem, onSetLevel,
   onSetItemQuantity, onMarkItemCrafted,
@@ -30,11 +39,11 @@ export function LoadoutSelector({
   const searchLower = search.toLowerCase();
   const allItems = Array.from(ITEM_REGISTRY.values());
 
-  const upgradeableItems = allItems
-    .filter(i => i.upgrades)
+  const selectableItems = allItems
+    .filter(i => (i.upgrades || i.craft_recipe || i.category === 'crafting_material') && i.category !== 'weapon_mod' && i.category !== 'key')
     .filter(i => !search || i.name.toLowerCase().includes(searchLower));
 
-  const grouped = groupBy(upgradeableItems, i => i.category);
+  const grouped = groupBy(selectableItems, i => i.category);
 
   const orderedCategories = [
     ...UPGRADEABLE_CATEGORY_ORDER.filter(c => grouped[c]),
@@ -69,6 +78,7 @@ export function LoadoutSelector({
           <CategorySection
             key={category}
             category={category}
+            label={CATEGORY_LABELS[category]}
             items={grouped[category]}
             selections={selections}
             forceExpanded={searchActive}
@@ -123,7 +133,7 @@ export function LoadoutSelector({
           </div>
         )}
 
-        {searchActive && orderedCategories.length === 0 && mods.length === 0 && (
+        {searchActive && selectableItems.length === 0 && mods.length === 0 && (
           <p className="text-sm text-gray-500 text-center py-8">No results for "{search}"</p>
         )}
       </div>

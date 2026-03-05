@@ -6,6 +6,7 @@ import { capitalize } from '../../lib/utils';
 
 interface Props {
   category: string;
+  label?: string;
   items: Item[];
   selections: LoadoutSelection[];
   forceExpanded?: boolean;
@@ -15,7 +16,7 @@ interface Props {
   onMarkCrafted: (itemId: string) => void;
 }
 
-export function CategorySection({ category, items, selections, forceExpanded, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
+export function CategorySection({ category, label, items, selections, forceExpanded, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
   const [collapsed, setCollapsed] = useState(true);
   const activeCount = items.filter(i => selections.some(s => s.item_id === i.id)).length;
   const showContent = !collapsed || !!forceExpanded;
@@ -27,7 +28,7 @@ export function CategorySection({ category, items, selections, forceExpanded, on
         className="flex items-center gap-2 w-full text-left mb-2 group"
       >
         <span className="text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-gray-300 transition-colors">
-          {capitalize(category)}s
+          {label ?? `${capitalize(category)}s`}
         </span>
         {activeCount > 0 && (
           <span className="text-xs bg-blue-600/30 text-blue-400 px-1.5 py-0.5 rounded-full border border-blue-600/50">

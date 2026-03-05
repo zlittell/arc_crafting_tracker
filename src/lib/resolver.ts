@@ -57,23 +57,51 @@ export function resolveShoppingList(
 
   for (const selection of selections) {
     const item = ITEM_REGISTRY.get(selection.item_id);
-    if (!item?.upgrades) continue;
+    if (!item) continue;
     const qty = selection.quantity ?? 1;
 
-    for (let levelNum = 1; levelNum <= selection.target_level; levelNum++) {
-      const levelData = item.upgrades.find(u => u.level === levelNum);
-      if (!levelData) continue;
+    if (item.upgrades) {
+      for (let levelNum = 1; levelNum <= selection.target_level; levelNum++) {
+        const levelData = item.upgrades.find(u => u.level === levelNum);
+        if (!levelData) continue;
 
-      for (const ingredient of levelData.ingredients) {
+        for (const ingredient of levelData.ingredients) {
+          expandIngredient(
+            ingredient.material_id,
+            ingredient.quantity * qty,
+            ingredient.quantity,
+            mode,
+            { item_name: item.name, context: levelData.label ?? `Level ${levelNum}`, quantity: ingredient.quantity * qty },
+            accumulator,
+            new Set()
+          );
+        }
+      }
+    } else if (item.craft_recipe) {
+      for (const ingredient of item.craft_recipe.ingredients) {
         expandIngredient(
           ingredient.material_id,
           ingredient.quantity * qty,
           ingredient.quantity,
           mode,
-          { item_name: item.name, context: levelData.label ?? `Level ${levelNum}`, quantity: ingredient.quantity * qty },
+          { item_name: item.name, context: 'Craft', quantity: ingredient.quantity * qty },
           accumulator,
           new Set()
         );
+      }
+    } else {
+      // Raw material selected directly — add the item itself to the gather list
+      const existing = accumulator.get(item.id);
+      if (existing) {
+        existing.quantity += qty;
+        existing.per_craft_quantity += 1;
+        existing.sources.push({ item_name: item.name, context: 'Goal', quantity: qty });
+      } else {
+        accumulator.set(item.id, {
+          quantity: qty,
+          per_craft_quantity: 1,
+          sources: [{ item_name: item.name, context: 'Goal', quantity: qty }],
+        });
       }
     }
   }

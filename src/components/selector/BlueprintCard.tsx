@@ -41,11 +41,13 @@ export function BlueprintCard({ item, selection, onToggle, onSetLevel, onSetQuan
 
       {isSelected && selection && (
         <div className="mt-2 pl-5 space-y-2">
-          <RankSelector
-            availableLevels={availableLevels}
-            selectedLevel={selection.target_level}
-            onSetLevel={(level) => onSetLevel(item.id, level)}
-          />
+          {availableLevels.length > 0 && (
+            <RankSelector
+              availableLevels={availableLevels}
+              selectedLevel={selection.target_level}
+              onSetLevel={(level) => onSetLevel(item.id, level)}
+            />
+          )}
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400">Qty:</span>
             <button
