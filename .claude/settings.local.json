@@ -19,7 +19,8 @@
       "Bash(node -e \":*)",
       "Bash(npm run sync)",
       "Bash(bun add firebase)",
-      "Bash(bun run build)"
+      "Bash(bun run build)",
+      "Bash(npx tsc --noEmit)"
     ]
   }
 }

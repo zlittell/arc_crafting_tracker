@@ -6,6 +6,7 @@ import { Layout } from './components/layout/Layout';
 import { Header } from './components/layout/Header';
 import { CraftSelector } from './components/selector/CraftSelector';
 import { ShoppingList } from './components/shopping/ShoppingList';
+import { RaidList } from './components/raid/RaidList';
 import { usePersistence } from './hooks/usePersistence';
 
 function tryParse<T>(key: string, fallback: T): T {
@@ -27,6 +28,18 @@ export default function App() {
     () => resolveShoppingList(selections, modQuantities, 'craftable'),
     [selections, modQuantities]
   );
+
+  const rawShoppingList = useMemo(
+    () => resolveShoppingList(selections, modQuantities, 'raw'),
+    [selections, modQuantities]
+  );
+
+  const raidItems = useMemo(() => {
+    return rawShoppingList.materials
+      .map(m => ({ ...m, remaining: Math.max(0, m.quantity - (collected[m.material_id] ?? 0)) }))
+      .filter(m => m.remaining > 0)
+      .sort((a, b) => b.remaining - a.remaining);
+  }, [rawShoppingList, collected]);
 
   const itemAffordability = useMemo(() => {
     const result: Record<string, boolean> = {};
@@ -176,6 +189,7 @@ export default function App() {
           onRefineMaterial={handleRefineItem}
         />
       }
+      raid={<RaidList raidItems={raidItems} />}
     />
   );
 }

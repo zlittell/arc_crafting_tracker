@@ -11,7 +11,6 @@ interface Props {
 }
 
 export function MaterialRow({ material, allCollected, expandAll, onSetCollected, onRefineMaterial }: Props) {
-  const [showSources, setShowSources] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
   const collected = allCollected[material.material_id] ?? 0;
@@ -23,9 +22,15 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
     : null;
 
   const showRecipe = recipe && (expandAll || expanded);
+  const remainingRefines = Math.max(0, material.quantity - collected);
   const canAffordRefine = !recipe || recipe.ingredients.every(
     ing => (allCollected[ing.material_id] ?? 0) >= ing.quantity
   );
+
+  // Deduplicated source names, capped at 2 with overflow count
+  const uniqueNames = [...new Set(material.sources.map(s => s.item_name))];
+  const displaySources = uniqueNames.slice(0, 2).join(', ') +
+    (uniqueNames.length > 2 ? `, +${uniqueNames.length - 2} more` : '');
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const val = parseInt(e.target.value, 10);
@@ -57,25 +62,14 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
           <span className="w-4 shrink-0" />
         )}
 
-        {/* Material name */}
+        {/* Material name + always-visible sources */}
         <div className="flex-1 min-w-0">
-          <button
-            onClick={() => setShowSources(s => !s)}
-            className={`text-left text-sm font-medium w-full text-gray-200 ${
-              isComplete ? 'line-through' : ''
-            } hover:underline bg-transparent border-0 p-0 cursor-pointer`}
-            title="Click to show sources"
-          >
+          <span className={`text-sm font-medium text-gray-200 ${isComplete ? 'line-through' : ''}`}>
             {material.name}
-          </button>
-
-          {showSources && (
-            <div className="mt-1 text-xs text-gray-400 space-y-0.5">
-              {material.sources.map((s, i) => (
-                <div key={i} className="pl-2 border-l border-gray-600">
-                  {s.item_name} — {s.context}: ×{s.quantity}
-                </div>
-              ))}
+          </span>
+          {uniqueNames.length > 0 && (
+            <div className="text-xs text-gray-500 truncate mt-0.5">
+              {displaySources}
             </div>
           )}
         </div>
@@ -124,20 +118,29 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
       {/* Expanded refinery panel */}
       {showRecipe && (
         <div className="mx-3 mb-2 rounded border border-gray-600/50 bg-gray-900/60 px-3 py-2 space-y-1.5">
-          <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-            Refinery recipe (yields 1)
+          <div className="text-xs uppercase tracking-wide mb-1 flex items-center justify-between">
+            <span className="text-gray-500">Refinery recipe (yields 1)</span>
+            {remainingRefines > 0 && (
+              <span className="text-arc-yellow normal-case tracking-normal">
+                {remainingRefines} more {remainingRefines === 1 ? 'refine' : 'refines'} needed
+              </span>
+            )}
           </div>
 
           {recipe.ingredients.map(ing => {
             const mat = ITEM_REGISTRY.get(ing.material_id);
             const ingCollected = allCollected[ing.material_id] ?? 0;
             const hasEnough = ingCollected >= ing.quantity;
+            const totalNeeded = ing.quantity * remainingRefines;
             return (
               <div key={ing.material_id} className="flex items-center gap-2 text-xs">
                 <span className={`flex-1 text-gray-300 ${hasEnough ? 'line-through opacity-50' : ''}`}>
                   {mat?.name ?? ing.material_id}
                 </span>
-                <span className="text-gray-500">×{ing.quantity}</span>
+                <span className="text-gray-600 whitespace-nowrap">×{ing.quantity}/refine</span>
+                {remainingRefines > 0 && (
+                  <span className="text-gray-400 whitespace-nowrap">×{totalNeeded} total</span>
+                )}
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => onSetCollected(ing.material_id, Math.max(0, ingCollected - 1))}
