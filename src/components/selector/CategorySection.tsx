@@ -35,7 +35,7 @@ export function CategorySection({ category, label, items, selections, forceExpan
             {activeCount}
           </span>
         )}
-        <span className="ml-auto text-gray-600 text-xs">{showContent ? '▼' : '▶'}</span>
+        <span className={`ml-auto text-gray-500 text-xs inline-block transition-transform duration-150 ${showContent ? 'rotate-90' : ''}`}>▶</span>
       </button>
 
       {showContent && (

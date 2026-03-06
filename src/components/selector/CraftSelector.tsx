@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { CraftSelection } from '../../types/resolver';
 import { ITEM_REGISTRY } from '../../lib/loader';
 import { CategorySection } from './CategorySection';
+import { BlueprintCard } from './BlueprintCard';
 import { ModCard } from './ModCard';
 import { groupBy, capitalize } from '../../lib/utils';
 
@@ -59,6 +60,14 @@ export function CraftSelector({
   const searchActive = search.length > 0;
   const showModsContent = !modsCollapsed || (searchActive && mods.length > 0);
 
+  const selectedItems = allItems.filter(i =>
+    i.category !== 'weapon_mod' && selections.some(s => s.item_id === i.id)
+  );
+  const selectedMods = allItems.filter(i =>
+    i.category === 'weapon_mod' && i.id in modQuantities
+  );
+  const hasSelections = selectedItems.length > 0 || selectedMods.length > 0;
+
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
       {/* Search box */}
@@ -74,6 +83,39 @@ export function CraftSelector({
 
       {/* Scrollable list */}
       <div className="flex-1 overflow-y-auto px-1">
+        {/* Pinned selected items */}
+        {hasSelections && !searchActive && (
+          <div className="mb-5">
+            <div className="text-xs font-bold uppercase tracking-wider text-arc-cyan mb-2">
+              Selected ({selectedItems.length + selectedMods.length})
+            </div>
+            <div className="space-y-2">
+              {selectedItems.map(item => (
+                <BlueprintCard
+                  key={item.id}
+                  item={item}
+                  selection={selections.find(s => s.item_id === item.id)}
+                  onToggle={onToggleItem}
+                  onSetLevel={onSetLevel}
+                  onSetQuantity={onSetItemQuantity}
+                  onMarkCrafted={onMarkItemCrafted}
+                />
+              ))}
+              {selectedMods.map(mod => (
+                <ModCard
+                  key={mod.id}
+                  mod={mod}
+                  isSelected={true}
+                  quantity={modQuantities[mod.id]}
+                  onToggle={onToggleMod}
+                  onSetQuantity={onSetModQuantity}
+                  onMarkCrafted={onMarkModCrafted}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {orderedCategories.map(category => (
           <CategorySection
             key={category}
@@ -103,7 +145,7 @@ export function CraftSelector({
                   {activeModCount}
                 </span>
               )}
-              <span className="ml-auto text-gray-600 text-xs">{showModsContent ? '▼' : '▶'}</span>
+              <span className={`ml-auto text-gray-500 text-xs inline-block transition-transform duration-150 ${showModsContent ? 'rotate-90' : ''}`}>▶</span>
             </button>
 
             {showModsContent && (
