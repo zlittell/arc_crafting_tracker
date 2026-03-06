@@ -5,13 +5,14 @@ import { RankSelector } from './RankSelector';
 interface Props {
   item: Item;
   selection: CraftSelection | undefined;
+  canCraft: boolean;
   onToggle: (itemId: string) => void;
   onSetLevel: (itemId: string, level: number) => void;
   onSetQuantity: (itemId: string, qty: number) => void;
   onMarkCrafted: (itemId: string) => void;
 }
 
-export function BlueprintCard({ item, selection, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
+export function BlueprintCard({ item, selection, canCraft, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
   const isSelected = !!selection;
   const availableLevels = item.upgrades?.map(u => u.level) ?? [];
   const quantity = selection?.quantity ?? 1;
@@ -65,7 +66,7 @@ export function BlueprintCard({ item, selection, onToggle, onSetLevel, onSetQuan
             </button>
             <button
               onClick={() => onMarkCrafted(item.id)}
-              disabled={quantity === 0}
+              disabled={quantity === 0 || !canCraft}
               className="ml-2 text-xs px-2 py-1 rounded bg-arc-green/10 hover:bg-arc-green/20 text-arc-green border border-arc-green/30 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Crafted 1

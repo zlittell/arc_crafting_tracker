@@ -9,6 +9,7 @@ interface Props {
   label?: string;
   items: Item[];
   selections: CraftSelection[];
+  itemAffordability: Record<string, boolean>;
   forceExpanded?: boolean;
   onToggle: (itemId: string) => void;
   onSetLevel: (itemId: string, level: number) => void;
@@ -16,7 +17,7 @@ interface Props {
   onMarkCrafted: (itemId: string) => void;
 }
 
-export function CategorySection({ category, label, items, selections, forceExpanded, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
+export function CategorySection({ category, label, items, selections, itemAffordability, forceExpanded, onToggle, onSetLevel, onSetQuantity, onMarkCrafted }: Props) {
   const [collapsed, setCollapsed] = useState(true);
   const activeCount = items.filter(i => selections.some(s => s.item_id === i.id)).length;
   const showContent = !collapsed || !!forceExpanded;
@@ -45,6 +46,7 @@ export function CategorySection({ category, label, items, selections, forceExpan
               key={item.id}
               item={item}
               selection={selections.find(s => s.item_id === item.id)}
+              canCraft={itemAffordability[item.id] ?? false}
               onToggle={onToggle}
               onSetLevel={onSetLevel}
               onSetQuantity={onSetQuantity}

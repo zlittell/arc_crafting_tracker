@@ -4,12 +4,13 @@ interface Props {
   mod: Item;
   isSelected: boolean;
   quantity: number;
+  canCraft: boolean;
   onToggle: (modId: string) => void;
   onSetQuantity: (modId: string, qty: number) => void;
   onMarkCrafted: (modId: string) => void;
 }
 
-export function ModCard({ mod, isSelected, quantity, onToggle, onSetQuantity, onMarkCrafted }: Props) {
+export function ModCard({ mod, isSelected, quantity, canCraft, onToggle, onSetQuantity, onMarkCrafted }: Props) {
 
   return (
     <div className={`rounded-lg border p-3 transition-colors ${
@@ -46,7 +47,7 @@ export function ModCard({ mod, isSelected, quantity, onToggle, onSetQuantity, on
           </button>
           <button
             onClick={() => onMarkCrafted(mod.id)}
-            disabled={quantity === 0}
+            disabled={quantity === 0 || !canCraft}
             className="ml-2 text-xs px-2 py-1 rounded bg-arc-green/10 hover:bg-arc-green/20 text-arc-green border border-arc-green/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Crafted 1

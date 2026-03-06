@@ -28,6 +28,29 @@ export default function App() {
     [selections, modQuantities]
   );
 
+  const itemAffordability = useMemo(() => {
+    const result: Record<string, boolean> = {};
+    for (const sel of selections) {
+      const oneCraft = resolveShoppingList([{ ...sel, quantity: 1 }], {}, 'craftable');
+      result[sel.item_id] = oneCraft.materials.every(
+        mat => (collected[mat.material_id] ?? 0) >= mat.quantity
+      );
+    }
+    return result;
+  }, [selections, collected]);
+
+  const modAffordability = useMemo(() => {
+    const result: Record<string, boolean> = {};
+    for (const [modId, qty] of Object.entries(modQuantities)) {
+      if (!qty) continue;
+      const oneCraft = resolveShoppingList([], { [modId]: 1 }, 'craftable');
+      result[modId] = oneCraft.materials.every(
+        mat => (collected[mat.material_id] ?? 0) >= mat.quantity
+      );
+    }
+    return result;
+  }, [modQuantities, collected]);
+
   function handleToggleItem(itemId: string) {
     setSelections(prev => {
       const exists = prev.find(s => s.item_id === itemId);
@@ -69,6 +92,10 @@ export default function App() {
     const selection = selections.find(s => s.item_id === itemId);
     if (!selection) return;
     const oneCraft = resolveShoppingList([{ ...selection, quantity: 1 }], {}, 'craftable');
+    const canAfford = oneCraft.materials.every(
+      mat => (collected[mat.material_id] ?? 0) >= mat.quantity
+    );
+    if (!canAfford) return;
     setCollected(prev => {
       const next = { ...prev };
       for (const mat of oneCraft.materials) {
@@ -83,6 +110,10 @@ export default function App() {
     const qty = modQuantities[modId];
     if (!qty) return;
     const oneCraft = resolveShoppingList([], { [modId]: 1 }, 'craftable');
+    const canAfford = oneCraft.materials.every(
+      mat => (collected[mat.material_id] ?? 0) >= mat.quantity
+    );
+    if (!canAfford) return;
     setCollected(prev => {
       const next = { ...prev };
       for (const mat of oneCraft.materials) {
@@ -96,6 +127,10 @@ export default function App() {
   function handleRefineItem(itemId: string) {
     const item = ITEM_REGISTRY.get(itemId);
     if (!item?.craft_recipe) return;
+    const canAfford = item.craft_recipe.ingredients.every(
+      ing => (collected[ing.material_id] ?? 0) >= ing.quantity
+    );
+    if (!canAfford) return;
     setCollected(prev => {
       const next = { ...prev };
       for (const ing of item.craft_recipe!.ingredients) {
@@ -121,6 +156,8 @@ export default function App() {
         <CraftSelector
           selections={selections}
           modQuantities={modQuantities}
+          itemAffordability={itemAffordability}
+          modAffordability={modAffordability}
           onToggleItem={handleToggleItem}
           onSetLevel={handleSetLevel}
           onSetItemQuantity={handleSetItemQuantity}

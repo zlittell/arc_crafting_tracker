@@ -9,6 +9,8 @@ import { groupBy, capitalize } from '../../lib/utils';
 interface Props {
   selections: CraftSelection[];
   modQuantities: Record<string, number>;
+  itemAffordability: Record<string, boolean>;
+  modAffordability: Record<string, boolean>;
   onToggleItem: (itemId: string) => void;
   onSetLevel: (itemId: string, level: number) => void;
   onSetItemQuantity: (itemId: string, qty: number) => void;
@@ -30,7 +32,8 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export function CraftSelector({
-  selections, modQuantities, onToggleItem, onSetLevel,
+  selections, modQuantities, itemAffordability, modAffordability,
+  onToggleItem, onSetLevel,
   onSetItemQuantity, onMarkItemCrafted,
   onToggleMod, onSetModQuantity, onMarkModCrafted,
 }: Props) {
@@ -95,6 +98,7 @@ export function CraftSelector({
                   key={item.id}
                   item={item}
                   selection={selections.find(s => s.item_id === item.id)}
+                  canCraft={itemAffordability[item.id] ?? false}
                   onToggle={onToggleItem}
                   onSetLevel={onSetLevel}
                   onSetQuantity={onSetItemQuantity}
@@ -107,6 +111,7 @@ export function CraftSelector({
                   mod={mod}
                   isSelected={true}
                   quantity={modQuantities[mod.id]}
+                  canCraft={modAffordability[mod.id] ?? false}
                   onToggle={onToggleMod}
                   onSetQuantity={onSetModQuantity}
                   onMarkCrafted={onMarkModCrafted}
@@ -123,6 +128,7 @@ export function CraftSelector({
             label={CATEGORY_LABELS[category]}
             items={grouped[category]}
             selections={selections}
+            itemAffordability={itemAffordability}
             forceExpanded={searchActive}
             onToggle={onToggleItem}
             onSetLevel={onSetLevel}
@@ -162,6 +168,7 @@ export function CraftSelector({
                           mod={mod}
                           isSelected={mod.id in modQuantities}
                           quantity={modQuantities[mod.id] ?? 0}
+                          canCraft={modAffordability[mod.id] ?? false}
                           onToggle={onToggleMod}
                           onSetQuantity={onSetModQuantity}
                           onMarkCrafted={onMarkModCrafted}

@@ -23,6 +23,9 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
     : null;
 
   const showRecipe = recipe && (expandAll || expanded);
+  const canAffordRefine = !recipe || recipe.ingredients.every(
+    ing => (allCollected[ing.material_id] ?? 0) >= ing.quantity
+  );
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const val = parseInt(e.target.value, 10);
@@ -158,7 +161,8 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
 
           <button
             onClick={() => onRefineMaterial(material.material_id)}
-            className="mt-1 text-xs px-2 py-1 rounded bg-arc-yellow/10 hover:bg-arc-yellow/20 text-arc-yellow border border-arc-yellow/30"
+            disabled={!canAffordRefine}
+            className="mt-1 text-xs px-2 py-1 rounded bg-arc-yellow/10 hover:bg-arc-yellow/20 text-arc-yellow border border-arc-yellow/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Refine 1
           </button>
