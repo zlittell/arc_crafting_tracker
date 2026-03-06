@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import type { CraftSelection } from './types/resolver';
 import { ITEM_REGISTRY } from './lib/loader';
 import { resolveShoppingList } from './lib/resolver';
@@ -6,23 +6,22 @@ import { Layout } from './components/layout/Layout';
 import { Header } from './components/layout/Header';
 import { CraftSelector } from './components/selector/CraftSelector';
 import { ShoppingList } from './components/shopping/ShoppingList';
+import { usePersistence } from './hooks/usePersistence';
+
+function tryParse<T>(key: string, fallback: T): T {
+  try {
+    return JSON.parse(localStorage.getItem(key) ?? JSON.stringify(fallback));
+  } catch {
+    return fallback;
+  }
+}
 
 export default function App() {
-  const [selections, setSelections] = useState<CraftSelection[]>([]);
-  const [modQuantities, setModQuantities] = useState<Record<string, number>>({});
-  const [collected, setCollected] = useState<Record<string, number>>(
-    () => {
-      try {
-        return JSON.parse(localStorage.getItem('arc_collected') ?? '{}');
-      } catch {
-        return {};
-      }
-    }
-  );
+  const [selections, setSelections] = useState<CraftSelection[]>(() => tryParse('arc_selections', []));
+  const [modQuantities, setModQuantities] = useState<Record<string, number>>(() => tryParse('arc_mod_quantities', {}));
+  const [collected, setCollected] = useState<Record<string, number>>(() => tryParse('arc_collected', {}));
 
-  useEffect(() => {
-    localStorage.setItem('arc_collected', JSON.stringify(collected));
-  }, [collected]);
+  usePersistence({ selections, setSelections, modQuantities, setModQuantities, collected, setCollected });
 
   const shoppingList = useMemo(
     () => resolveShoppingList(selections, modQuantities, 'craftable'),

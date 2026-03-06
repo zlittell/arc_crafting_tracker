@@ -12,7 +12,7 @@ A browser-based supply list tool for Arc Raiders. The user picks which items the
 | Build | Vite |
 | Styling | Tailwind CSS |
 | Data | Git submodule (`data/arcraiders-data/`) → generated TypeScript (`src/data/generated.ts`) |
-| Persistence | `localStorage` (collected material counts only) |
+| Persistence | `localStorage` (all state) + optional Firestore via Google Sign-In (see [`docs/FIREBASE_SETUP.md`](FIREBASE_SETUP.md)) |
 
 ## Data Model
 
