@@ -68,7 +68,7 @@ export function CraftSelector({
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search items and mods…"
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-1.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-arc-cyan"
+          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-1.5 text-base sm:text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-arc-cyan"
         />
       </div>
 

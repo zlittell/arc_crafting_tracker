@@ -33,14 +33,14 @@ export function ModCard({ mod, isSelected, quantity, onToggle, onSetQuantity, on
           <span className="text-xs text-gray-400">Qty:</span>
           <button
             onClick={() => onSetQuantity(mod.id, quantity - 1)}
-            className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
+            className="w-9 h-9 sm:w-6 sm:h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
           >
             −
           </button>
           <span className="text-sm text-gray-200 w-6 text-center">{quantity}</span>
           <button
             onClick={() => onSetQuantity(mod.id, quantity + 1)}
-            className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
+            className="w-9 h-9 sm:w-6 sm:h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
           >
             +
           </button>

@@ -58,7 +58,7 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
         <div className="flex-1 min-w-0">
           <button
             onClick={() => setShowSources(s => !s)}
-            className={`text-left text-sm font-medium truncate w-full text-gray-200 ${
+            className={`text-left text-sm font-medium w-full text-gray-200 ${
               isComplete ? 'line-through' : ''
             } hover:underline bg-transparent border-0 p-0 cursor-pointer`}
             title="Click to show sources"
@@ -89,21 +89,22 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={decrement}
-            className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
+            className="w-9 h-9 sm:w-6 sm:h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
           >
             −
           </button>
           <input
             type="number"
+            inputMode="numeric"
             value={collected}
             onChange={handleInput}
             min={0}
             max={material.quantity}
-            className="w-12 text-center text-sm bg-gray-800 border border-gray-600 rounded px-1 py-0.5 text-gray-200 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-12 text-center text-base sm:text-sm bg-gray-800 border border-gray-600 rounded px-1 py-0.5 text-gray-200 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
           <button
             onClick={increment}
-            className="w-6 h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
+            className="w-9 h-9 sm:w-6 sm:h-6 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm leading-none"
           >
             +
           </button>
