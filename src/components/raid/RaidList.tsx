@@ -1,20 +1,49 @@
 import { useState } from 'react';
-import type { ResolvedMaterial } from '../../types/resolver';
 
-export interface RaidItem extends ResolvedMaterial {
+export interface RaidSubIngredient {
+  material_id: string;
+  name: string;
+  quantityPerRefine: number;
+  totalNeeded: number;
   remaining: number;
 }
 
-interface Props {
-  raidItems: RaidItem[];
+export interface RaidCraftGroup {
+  material_id: string;
+  name: string;
+  craftRemaining: number;
+  subIngredients: RaidSubIngredient[];
 }
 
-export function RaidList({ raidItems }: Props) {
+export interface RaidDirectItem {
+  material_id: string;
+  name: string;
+  remaining: number;
+}
+
+export interface RaidData {
+  directGather: RaidDirectItem[];
+  craftGroups: RaidCraftGroup[];
+}
+
+interface Props {
+  raidData: RaidData;
+}
+
+export function RaidList({ raidData }: Props) {
   const [skipped, setSkipped] = useState<Set<string>>(new Set());
   const [showSkipped, setShowSkipped] = useState(false);
 
-  const activeItems = raidItems.filter(item => !skipped.has(item.material_id));
-  const skippedItems = raidItems.filter(item => skipped.has(item.material_id));
+  const { directGather, craftGroups } = raidData;
+
+  const activeGather = directGather.filter(item => !skipped.has(item.material_id));
+  const activeGroups = craftGroups.filter(g => !skipped.has(g.material_id));
+  const skippedGather = directGather.filter(item => skipped.has(item.material_id));
+  const skippedGroups = craftGroups.filter(g => skipped.has(g.material_id));
+  const skippedCount = skippedGather.length + skippedGroups.length;
+
+  const isEmpty = directGather.length === 0 && craftGroups.length === 0;
+  const allActive = activeGather.length === 0 && activeGroups.length === 0;
 
   function skip(id: string) {
     setSkipped(prev => new Set([...prev, id]));
@@ -34,11 +63,20 @@ export function RaidList({ raidItems }: Props) {
   }
 
   function handleCopy() {
-    const text = activeItems.map(item => `${item.name} ×${item.remaining}`).join('\n');
-    navigator.clipboard.writeText(text);
+    const lines: string[] = [];
+    for (const item of activeGather) {
+      lines.push(`${item.name} ×${item.remaining}`);
+    }
+    for (const group of activeGroups) {
+      lines.push(`[Craft: ${group.name} ×${group.craftRemaining}]`);
+      for (const ing of group.subIngredients) {
+        lines.push(`  ${ing.name} ×${ing.totalNeeded} (×${ing.quantityPerRefine}/refine)`);
+      }
+    }
+    navigator.clipboard.writeText(lines.join('\n'));
   }
 
-  if (raidItems.length === 0) {
+  if (isEmpty) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-gray-500 py-20">
         <div className="text-4xl mb-4">✓</div>
@@ -48,13 +86,15 @@ export function RaidList({ raidItems }: Props) {
     );
   }
 
+  const totalActiveCount = activeGather.length + activeGroups.length;
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-700">
         <div>
-          <span className="text-sm text-gray-400">{activeItems.length} materials to gather</span>
-          <p className="text-xs text-gray-600 mt-0.5">Sorted by most needed first</p>
+          <span className="text-sm text-gray-400">{totalActiveCount} items to find</span>
+          <p className="text-xs text-gray-600 mt-0.5">Gather items and craft groups</p>
         </div>
         <button
           onClick={handleCopy}
@@ -65,48 +105,91 @@ export function RaidList({ raidItems }: Props) {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {/* Active items */}
-        {activeItems.length === 0 ? (
+        {allActive ? (
           <div className="text-sm text-gray-500 px-3 py-4 text-center">
             All items skipped — expand the skipped section below to restore.
           </div>
         ) : (
-          <div className="space-y-0.5">
-            {activeItems.map(item => {
-              const uniqueNames = [...new Set(item.sources.map(s => s.item_name))];
-              const sourceDisplay =
-                uniqueNames.slice(0, 2).join(', ') +
-                (uniqueNames.length > 2 ? `, +${uniqueNames.length - 2} more` : '');
-
-              return (
-                <div
-                  key={item.material_id}
-                  className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800/40 group"
-                >
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-medium text-gray-200">{item.name}</span>
-                    {sourceDisplay && (
-                      <div className="text-xs text-gray-500 truncate mt-0.5">{sourceDisplay}</div>
-                    )}
-                  </div>
-                  <span className="text-sm font-mono text-arc-yellow whitespace-nowrap">
-                    ×{item.remaining}
-                  </span>
-                  <button
-                    onClick={() => skip(item.material_id)}
-                    title="Skip this item for this raid"
-                    className="w-10 h-10 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg sm:rounded bg-gray-800/60 sm:bg-transparent text-gray-500 hover:text-gray-200 transition-colors shrink-0"
-                  >
-                    ×
-                  </button>
+          <>
+            {/* Direct gather section */}
+            {activeGather.length > 0 && (
+              <div className="mb-4">
+                <div className="px-3 mb-1">
+                  <span className="text-xs text-gray-500 uppercase tracking-wider">Gather</span>
                 </div>
-              );
-            })}
-          </div>
+                <div className="space-y-0.5">
+                  {activeGather.map(item => (
+                    <div
+                      key={item.material_id}
+                      className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800/40 group"
+                    >
+                      <span className="flex-1 text-sm font-medium text-gray-200">{item.name}</span>
+                      <span className="text-sm font-mono text-arc-yellow whitespace-nowrap">
+                        ×{item.remaining}
+                      </span>
+                      <button
+                        onClick={() => skip(item.material_id)}
+                        title="Skip this item for this raid"
+                        className="w-10 h-10 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg sm:rounded bg-gray-800/60 sm:bg-transparent text-gray-500 hover:text-gray-200 transition-colors shrink-0"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Craft groups section */}
+            {activeGroups.length > 0 && (
+              <div className="mb-4">
+                <div className="px-3 mb-1">
+                  <span className="text-xs text-gray-500 uppercase tracking-wider">Craft / Refine</span>
+                </div>
+                <div className="space-y-3">
+                  {activeGroups.map(group => (
+                    <div key={group.material_id} className="rounded-lg border border-gray-700/60 overflow-hidden">
+                      {/* Group header */}
+                      <div className="flex items-center gap-3 px-3 py-2 bg-gray-800/40">
+                        <div className="flex-1 min-w-0">
+                          <span className="text-sm font-semibold text-gray-200">{group.name}</span>
+                          <span className="ml-2 text-xs text-gray-500">×{group.craftRemaining} to craft</span>
+                        </div>
+                        <button
+                          onClick={() => skip(group.material_id)}
+                          title="Skip this group for this raid"
+                          className="w-10 h-10 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg sm:rounded bg-gray-800/60 sm:bg-transparent text-gray-500 hover:text-gray-200 transition-colors shrink-0"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      {/* Sub-ingredients */}
+                      <div className="divide-y divide-gray-800/60">
+                        {group.subIngredients.map(ing => (
+                          <div
+                            key={ing.material_id}
+                            className="flex items-center gap-3 px-3 py-1.5 pl-5"
+                          >
+                            <span className="flex-1 text-sm text-gray-300">{ing.name}</span>
+                            <span className="text-sm font-mono text-arc-yellow whitespace-nowrap">
+                              ×{ing.totalNeeded}
+                            </span>
+                            <span className="text-xs text-gray-600 whitespace-nowrap">
+                              ×{ing.quantityPerRefine}/refine
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* Skipped section */}
-        {skippedItems.length > 0 && (
+        {skippedCount > 0 && (
           <div className="mt-4 border-t border-gray-800 pt-3">
             <div className="flex items-center justify-between px-3 mb-1">
               <button
@@ -114,7 +197,7 @@ export function RaidList({ raidItems }: Props) {
                 className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-300 transition-colors py-2 px-1"
               >
                 <span className="text-gray-600">{showSkipped ? '▼' : '▶'}</span>
-                Skipped ({skippedItems.length})
+                Skipped ({skippedCount})
               </button>
               <button
                 onClick={restoreAll}
@@ -126,7 +209,7 @@ export function RaidList({ raidItems }: Props) {
 
             {showSkipped && (
               <div className="space-y-0.5">
-                {skippedItems.map(item => (
+                {skippedGather.map(item => (
                   <div
                     key={item.material_id}
                     className="flex items-center gap-3 px-3 py-1.5 rounded"
@@ -137,6 +220,23 @@ export function RaidList({ raidItems }: Props) {
                     </span>
                     <button
                       onClick={() => restore(item.material_id)}
+                      title="Restore to active list"
+                      className="w-10 h-10 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg sm:rounded bg-gray-800/60 sm:bg-transparent text-gray-600 hover:text-gray-300 transition-colors shrink-0"
+                    >
+                      ↩
+                    </button>
+                  </div>
+                ))}
+                {skippedGroups.map(group => (
+                  <div
+                    key={group.material_id}
+                    className="flex items-center gap-3 px-3 py-1.5 rounded"
+                  >
+                    <span className="flex-1 text-sm text-gray-600 truncate">
+                      {group.name} <span className="text-gray-700">×{group.craftRemaining}</span>
+                    </span>
+                    <button
+                      onClick={() => restore(group.material_id)}
                       title="Restore to active list"
                       className="w-10 h-10 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg sm:rounded bg-gray-800/60 sm:bg-transparent text-gray-600 hover:text-gray-300 transition-colors shrink-0"
                     >

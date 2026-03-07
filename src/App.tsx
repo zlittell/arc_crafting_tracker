@@ -7,6 +7,7 @@ import { Header } from './components/layout/Header';
 import { CraftSelector } from './components/selector/CraftSelector';
 import { ShoppingList } from './components/shopping/ShoppingList';
 import { RaidList } from './components/raid/RaidList';
+import type { RaidData } from './components/raid/RaidList';
 import { usePersistence } from './hooks/usePersistence';
 
 function tryParse<T>(key: string, fallback: T): T {
@@ -29,17 +30,47 @@ export default function App() {
     [selections, modQuantities]
   );
 
-  const rawShoppingList = useMemo(
-    () => resolveShoppingList(selections, modQuantities, 'raw'),
-    [selections, modQuantities]
-  );
+  const raidData = useMemo((): RaidData => {
+    const craftGroups: RaidData['craftGroups'] = [];
+    const directGather: RaidData['directGather'] = [];
 
-  const raidItems = useMemo(() => {
-    return rawShoppingList.materials
-      .map(m => ({ ...m, remaining: Math.max(0, m.quantity - (collected[m.material_id] ?? 0)) }))
-      .filter(m => m.remaining > 0)
-      .sort((a, b) => b.remaining - a.remaining);
-  }, [rawShoppingList, collected]);
+    for (const material of shoppingList.materials) {
+      const craftRemaining = Math.max(
+        0, material.quantity - (collected[material.material_id] ?? 0)
+      );
+
+      if (material.craft_recipe_available) {
+        if (craftRemaining === 0) continue;
+        const item = ITEM_REGISTRY.get(material.material_id);
+        if (!item?.craft_recipe) continue;
+
+        craftGroups.push({
+          material_id: material.material_id,
+          name: material.name,
+          craftRemaining,
+          subIngredients: item.craft_recipe.ingredients.map(ing => {
+            const totalNeeded = ing.quantity * craftRemaining;
+            return {
+              material_id: ing.material_id,
+              name: ITEM_REGISTRY.get(ing.material_id)?.name ?? ing.material_id,
+              quantityPerRefine: ing.quantity,
+              totalNeeded,
+              remaining: Math.max(0, totalNeeded - (collected[ing.material_id] ?? 0)),
+            };
+          }),
+        });
+      } else {
+        if (craftRemaining === 0) continue;
+        directGather.push({
+          material_id: material.material_id,
+          name: material.name,
+          remaining: craftRemaining,
+        });
+      }
+    }
+
+    return { directGather, craftGroups };
+  }, [shoppingList, collected]);
 
   const itemAffordability = useMemo(() => {
     const result: Record<string, boolean> = {};
@@ -189,7 +220,7 @@ export default function App() {
           onRefineMaterial={handleRefineItem}
         />
       }
-      raid={<RaidList raidItems={raidItems} />}
+      raid={<RaidList raidData={raidData} />}
     />
   );
 }

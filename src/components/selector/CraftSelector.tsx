@@ -75,13 +75,24 @@ export function CraftSelector({
     <div className="flex flex-col flex-1 overflow-hidden">
       {/* Search box */}
       <div className="px-1 pb-3">
-        <input
-          type="text"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search items and mods…"
-          className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-1.5 text-base sm:text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-arc-cyan"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search items and mods…"
+            className="w-full bg-gray-800 border border-gray-600 rounded px-3 py-1.5 text-base sm:text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-arc-cyan pr-8"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-gray-600 hover:bg-gray-500 text-gray-300 hover:text-white transition-colors text-sm leading-none"
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Scrollable list */}
