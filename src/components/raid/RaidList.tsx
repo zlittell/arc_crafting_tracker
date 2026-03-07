@@ -86,16 +86,10 @@ export function RaidList({ raidData }: Props) {
     );
   }
 
-  const totalActiveCount = activeGather.length + activeGroups.length;
-
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-700">
-        <div>
-          <span className="text-sm text-gray-400">{totalActiveCount} items to find</span>
-          <p className="text-xs text-gray-600 mt-0.5">Gather items and craft groups</p>
-        </div>
+      <div className="flex items-center justify-end mb-4 pb-3 border-b border-gray-700">
         <button
           onClick={handleCopy}
           className="text-xs text-gray-400 hover:text-gray-200 px-3 py-2 sm:px-2 sm:py-1 rounded border border-gray-700 hover:border-gray-500 transition-colors"
@@ -114,9 +108,6 @@ export function RaidList({ raidData }: Props) {
             {/* Direct gather section */}
             {activeGather.length > 0 && (
               <div className="mb-4">
-                <div className="px-3 mb-1">
-                  <span className="text-xs text-gray-500 uppercase tracking-wider">Gather</span>
-                </div>
                 <div className="space-y-0.5">
                   {activeGather.map(item => (
                     <div
@@ -143,9 +134,6 @@ export function RaidList({ raidData }: Props) {
             {/* Craft groups section */}
             {activeGroups.length > 0 && (
               <div className="mb-4">
-                <div className="px-3 mb-1">
-                  <span className="text-xs text-gray-500 uppercase tracking-wider">Craft / Refine</span>
-                </div>
                 <div className="space-y-3">
                   {activeGroups.map(group => (
                     <div key={group.material_id} className="rounded-lg border border-gray-700/60 overflow-hidden">
