@@ -144,16 +144,16 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => onSetCollected(ing.material_id, Math.max(0, ingCollected - 1))}
-                    className="w-5 h-5 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 leading-none"
+                    className="w-8 h-8 sm:w-5 sm:h-5 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 leading-none"
                   >
                     −
                   </button>
-                  <span className={`w-5 text-center tabular-nums ${hasEnough ? 'text-arc-green' : 'text-gray-400'}`}>
+                  <span className={`w-8 sm:w-5 text-center tabular-nums ${hasEnough ? 'text-arc-green' : 'text-gray-400'}`}>
                     {ingCollected}
                   </span>
                   <button
                     onClick={() => onSetCollected(ing.material_id, ingCollected + 1)}
-                    className="w-5 h-5 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 leading-none"
+                    className="w-8 h-8 sm:w-5 sm:h-5 flex items-center justify-center rounded bg-gray-700 hover:bg-gray-600 text-gray-300 leading-none"
                   >
                     +
                   </button>
@@ -165,7 +165,7 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
           <button
             onClick={() => onRefineMaterial(material.material_id)}
             disabled={!canAffordRefine}
-            className="mt-1 text-xs px-2 py-1 rounded bg-arc-yellow/10 hover:bg-arc-yellow/20 text-arc-yellow border border-arc-yellow/30 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mt-1 text-xs px-3 py-2 sm:px-2 sm:py-1 rounded bg-arc-yellow/10 hover:bg-arc-yellow/20 text-arc-yellow border border-arc-yellow/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Refine 1
           </button>

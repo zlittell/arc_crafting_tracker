@@ -58,7 +58,7 @@ export function RaidList({ raidItems }: Props) {
         </div>
         <button
           onClick={handleCopy}
-          className="text-xs text-gray-400 hover:text-gray-200 px-2 py-1 rounded border border-gray-700 hover:border-gray-500 transition-colors"
+          className="text-xs text-gray-400 hover:text-gray-200 px-3 py-2 sm:px-2 sm:py-1 rounded border border-gray-700 hover:border-gray-500 transition-colors"
         >
           Copy list
         </button>
@@ -95,7 +95,7 @@ export function RaidList({ raidItems }: Props) {
                   <button
                     onClick={() => skip(item.material_id)}
                     title="Skip this item for this raid"
-                    className="text-gray-600 hover:text-gray-300 transition-colors text-sm leading-none w-5 h-5 flex items-center justify-center shrink-0"
+                    className="w-10 h-10 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg sm:rounded bg-gray-800/60 sm:bg-transparent text-gray-500 hover:text-gray-200 transition-colors shrink-0"
                   >
                     ×
                   </button>
@@ -111,14 +111,14 @@ export function RaidList({ raidItems }: Props) {
             <div className="flex items-center justify-between px-3 mb-1">
               <button
                 onClick={() => setShowSkipped(s => !s)}
-                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-300 transition-colors py-2 px-1"
               >
                 <span className="text-gray-600">{showSkipped ? '▼' : '▶'}</span>
                 Skipped ({skippedItems.length})
               </button>
               <button
                 onClick={restoreAll}
-                className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                className="text-xs text-gray-500 hover:text-gray-300 transition-colors px-3 py-2 sm:px-2 sm:py-1"
               >
                 Restore all
               </button>
@@ -138,7 +138,7 @@ export function RaidList({ raidItems }: Props) {
                     <button
                       onClick={() => restore(item.material_id)}
                       title="Restore to active list"
-                      className="text-gray-600 hover:text-gray-300 transition-colors text-sm leading-none w-5 h-5 flex items-center justify-center shrink-0"
+                      className="w-10 h-10 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg sm:rounded bg-gray-800/60 sm:bg-transparent text-gray-600 hover:text-gray-300 transition-colors shrink-0"
                     >
                       ↩
                     </button>

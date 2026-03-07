@@ -48,7 +48,7 @@ export function ModCard({ mod, isSelected, quantity, canCraft, onToggle, onSetQu
           <button
             onClick={() => onMarkCrafted(mod.id)}
             disabled={quantity === 0 || !canCraft}
-            className="ml-2 text-xs px-2 py-1 rounded bg-arc-green/10 hover:bg-arc-green/20 text-arc-green border border-arc-green/30 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="ml-2 text-xs px-2 py-2 sm:py-1 rounded bg-arc-green/10 hover:bg-arc-green/20 text-arc-green border border-arc-green/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Crafted 1
           </button>
