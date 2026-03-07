@@ -9,6 +9,7 @@ export function Header() {
         <h1 className="text-lg font-bold text-white tracking-tight">
           Arc Raiders Crafting Tracker
         </h1>
+        <span className="text-xs text-gray-600 font-mono">v{__APP_VERSION__}</span>
       </div>
 
       {isAvailable && !loading && (
