@@ -130,7 +130,7 @@ export function MaterialRow({ material, allCollected, expandAll, onSetCollected,
           {recipe.ingredients.map(ing => {
             const mat = ITEM_REGISTRY.get(ing.material_id);
             const ingCollected = allCollected[ing.material_id] ?? 0;
-            const hasEnough = ingCollected >= ing.quantity;
+            const hasEnough = remainingRefines === 0 || ingCollected >= ing.quantity * remainingRefines;
             const totalNeeded = ing.quantity * remainingRefines;
             return (
               <div key={ing.material_id} className="flex items-center gap-2 text-xs">
