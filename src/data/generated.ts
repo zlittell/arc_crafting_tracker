@@ -1469,7 +1469,15 @@ export const ALL_ITEMS: Item[] = [
   {
     "id": "arc_circuitry",
     "name": "ARC Circuitry",
-    "category": "crafting_material"
+    "category": "crafting_material",
+    "craft_recipe": {
+      "ingredients": [
+        {
+          "material_id": "arc_alloy",
+          "quantity": 8
+        }
+      ]
+    }
   },
   {
     "id": "arc_coolant",
@@ -1484,7 +1492,15 @@ export const ALL_ITEMS: Item[] = [
   {
     "id": "arc_motion_core",
     "name": "ARC Motion Core",
-    "category": "crafting_material"
+    "category": "crafting_material",
+    "craft_recipe": {
+      "ingredients": [
+        {
+          "material_id": "arc_alloy",
+          "quantity": 8
+        }
+      ]
+    }
   },
   {
     "id": "arc_performance_steel",
@@ -1859,7 +1875,23 @@ export const ALL_ITEMS: Item[] = [
   {
     "id": "complex_gun_parts",
     "name": "Complex Gun Parts",
-    "category": "crafting_material"
+    "category": "crafting_material",
+    "craft_recipe": {
+      "ingredients": [
+        {
+          "material_id": "heavy_gun_parts",
+          "quantity": 2
+        },
+        {
+          "material_id": "light_gun_parts",
+          "quantity": 2
+        },
+        {
+          "material_id": "medium_gun_parts",
+          "quantity": 2
+        }
+      ]
+    }
   },
   {
     "id": "coolant",
@@ -2593,7 +2625,15 @@ export const ALL_ITEMS: Item[] = [
   {
     "id": "heavy_gun_parts",
     "name": "Heavy Gun Parts",
-    "category": "crafting_material"
+    "category": "crafting_material",
+    "craft_recipe": {
+      "ingredients": [
+        {
+          "material_id": "simple_gun_parts",
+          "quantity": 4
+        }
+      ]
+    }
   },
   {
     "id": "heavy_shield",
@@ -2757,7 +2797,15 @@ export const ALL_ITEMS: Item[] = [
   {
     "id": "light_gun_parts",
     "name": "Light Gun Parts",
-    "category": "crafting_material"
+    "category": "crafting_material",
+    "craft_recipe": {
+      "ingredients": [
+        {
+          "material_id": "simple_gun_parts",
+          "quantity": 4
+        }
+      ]
+    }
   },
   {
     "id": "light_impact_grenade",
@@ -3025,7 +3073,15 @@ export const ALL_ITEMS: Item[] = [
   {
     "id": "medium_gun_parts",
     "name": "Medium Gun Parts",
-    "category": "crafting_material"
+    "category": "crafting_material",
+    "craft_recipe": {
+      "ingredients": [
+        {
+          "material_id": "simple_gun_parts",
+          "quantity": 4
+        }
+      ]
+    }
   },
   {
     "id": "medium_shield",

@@ -42,6 +42,7 @@ interface SourceItem {
   recipe?: Record<string, number>;
   upgradeCost?: Record<string, number>;
   craftQuantity?: number;
+  craftBench?: string | string[];
   modSlots?: Record<string, string[]>;
 }
 
@@ -101,6 +102,12 @@ function nameEn(src: SourceItem): string {
 
 function toIngredients(recipe: Record<string, number>): Ingredient[] {
   return Object.entries(recipe).map(([material_id, quantity]) => ({ material_id, quantity }));
+}
+
+function isRefinerCraftable(d: SourceItem): boolean {
+  if (!d.recipe || !d.craftBench) return false;
+  const benches = Array.isArray(d.craftBench) ? d.craftBench : [d.craftBench];
+  return benches.includes('refiner');
 }
 
 function tierSuffix(id: string): string | null {
@@ -297,8 +304,10 @@ function main() {
       case 'Basic Material':
       case 'Nature':
       case 'Recyclable':
-        // Gather-only materials — include in registry but no craft_recipe
-        item = { id: d.id, name: n, category: 'crafting_material' };
+        item = {
+          id: d.id, name: n, category: 'crafting_material',
+          ...(isRefinerCraftable(d) ? { craft_recipe: { ingredients: toIngredients(d.recipe!) } } : {}),
+        };
         break;
 
       // Skip: Blueprint, Trinket, Misc (filtered above)

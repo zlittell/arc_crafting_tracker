@@ -20,7 +20,13 @@
       "Bash(npm run sync)",
       "Bash(bun add firebase)",
       "Bash(bun run build)",
-      "Bash(npx tsc --noEmit)"
+      "Bash(npx tsc --noEmit)",
+      "Bash(grep -l '\"\"type\"\": \"\"Topside Material\"\"' /Users/zacklittell/code/arc_crafting_tracker/data/arcraiders-data/items/*.json)",
+      "Bash(for f in arc_alloy chemicals metal_parts processor simple_gun_parts)",
+      "Bash(do)",
+      "Bash(echo \"=== $f ===\")",
+      "Bash(__NEW_LINE_4e381ff23269f608__ jq '{craftBench, recipe: \\(.recipe | keys?\\)}' /Users/zacklittell/code/arc_crafting_tracker/data/arcraiders-data/items/$f.json)",
+      "Bash(done)"
     ]
   }
 }
