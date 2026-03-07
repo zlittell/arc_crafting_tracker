@@ -23,11 +23,6 @@ if ! git diff --quiet || ! git diff --cached --quiet; then
   exit 1
 fi
 
-echo "Bumping package.json to $VERSION..."
-npm version "$VERSION" --no-git-tag-version
-git add package.json
-git commit -m "chore: bump version to $VERSION"
-
 echo "Tagging $TAG at $(git rev-parse --short HEAD)..."
 git tag "$TAG"
 
